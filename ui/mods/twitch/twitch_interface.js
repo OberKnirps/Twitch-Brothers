@@ -4,6 +4,7 @@ var TwitchInterface = function()
 {
     this.mSQHandle = null;
     this.twitch_client = null;
+    this.TwitchNames = [];
     this.options = {
       options: {
         debug: false,
@@ -53,30 +54,36 @@ TwitchInterface.prototype.sendMSG = function (_data)
 TwitchInterface.prototype.initTwitchClient = function ()
 {
     SQ.call(this.mSQHandle, "updateChannels", null);
+    var thisTI = this;
     this.twitch_client = new client( this.options );
         this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
-        console.log('[message]: '+ message);
-    });
-    this.twitch_client.on( 'ping', function() {
-        console.log('[ping]');
-    });
-    this.twitch_client.on( 'pong', function( latency ) {
-        console.log('[pong]: '+ latency);
-    });
+            if(!thisTI.TwitchNames.includes(userstate["display-name"])){ //if(this.TwitchNames.indexOf(message.tags["display-name"]) !== -1){
+                thisTI.TwitchNames.push(userstate["display-name"]);
+                SQ.call(thisTI.mSQHandle, "namesDirtyCallback",null);
+            }
+        }
+    );
+
     this.twitch_client.connect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
 }
 
+TwitchInterface.prototype.transferNames = function (_TwitchNames)
+{
+    SQ.call(this.mSQHandle, "transferNamesCallback",this.TwitchNames);
+}
+
+
 TwitchInterface.prototype.updateChannels = function (_channels)
 {
-    this.options.channels = _channels.split(/ ,|, |,/);
+    this.options.channels = _channels.split(/[ ,;]+/);
 }
 
 TwitchInterface.prototype.onConnection = function (_handle)
 {
 
-    console.log = function(){
+    /*console.log = function(){
         SQ.call(_handle, "logCallback",arguments[0]);
-    }
+    }*/
 
     console.log('TWITCH::CONNECT');
     this.mSQHandle = _handle;

@@ -1,10 +1,10 @@
 this.twitch_interface <- {
     m = {
         JSHandle = null,
-        Parent = null,
-        ID = "",
-        Visible = null,
-        Animating = null
+        TwitchNames = {
+            List =[],
+            dirty = false
+        } 
     },
 
     function create()
@@ -28,30 +28,30 @@ this.twitch_interface <- {
 
     function connect()
     {
-        this.logDebug("twitch: call connect");
-
         this.m.JSHandle = ::UI.connect("TwitchInterface",this);
         this.m.JSHandle.asyncCall("initTwitchClient", null);
     }
 
-    function sendMessage(data){
-        this.m.JSHandle.asyncCall("sendMSG", data);
-    }
-
-
     function updateChannels(){
         this.m.JSHandle.asyncCall("updateChannels",::Const.TwitchMod.Settings.channelNames.getValue());
         this.logDebug("updateChannels: " + ::Const.TwitchMod.Settings.channelNames.getValue());
-        
-
     }
 
     function logCallback(val){
         this.logDebug("twitch log: " + val);
     }
 
-    function messageCallback(message){
-        //::Const.TwitchMod.DescriptionTest.setDescription(::Const.TwitchMod.DescriptionTest.Description + "\n" + message);
+    function transferNames(){
+        this.m.JSHandle.asyncCall("transferNames", null);
+    }
+
+    function transferNamesCallback(_names){
+        this.m.TwitchNames.List = _names;
+        this.m.TwitchNames.dirty = false;
+    }
+
+    function namesDirtyCallback(){
+        this.m.TwitchNames.dirty = true;
     }
 
 };
