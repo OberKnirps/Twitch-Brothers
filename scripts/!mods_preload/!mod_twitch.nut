@@ -1,7 +1,7 @@
 ::TwitchBres <- {
-    ID = "mod_twitchtest",
-    Version = "1.0.0",
-    Name = "twitch"
+    ID = "mod_twitch_brothers",
+    Version = "0.1.0",
+    Name = "Twitch Brothers"
 };
 ::Const.TwitchMod <- {
     DescriptionTest = null

@@ -9,7 +9,7 @@
 
     //TwitchBres.Settings.Textfield
     ::Const.TwitchMod.Settings <- {
-        channelNames = testPage.addStringSetting("Cannels", "", null)
+        channelNames = testPage.addStringSetting("Channels", "", null)
     }
 
     ::Const.TwitchMod.Settings.channelNames.addAfterChangeCallback(function ( _oldValue )
