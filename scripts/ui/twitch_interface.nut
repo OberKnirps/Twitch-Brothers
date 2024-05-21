@@ -1,5 +1,3 @@
-//::mods_registerJS("twitch/tmi.js");
-
 this.twitch_interface <- {
     m = {
         JSHandle = null,
@@ -33,12 +31,21 @@ this.twitch_interface <- {
         this.logDebug("twitch: call connect");
 
         this.m.JSHandle = ::UI.connect("TwitchInterface",this);
+        this.m.JSHandle.asyncCall("initTwitchClient", null);
     }
 
     function sendMessage(data){
         this.m.JSHandle.asyncCall("sendMSG", data);
     }
-    
+
+
+    function updateChannels(){
+        this.m.JSHandle.asyncCall("updateChannels",::Const.TwitchMod.Settings.channelNames.getValue());
+        this.logDebug("updateChannels: " + ::Const.TwitchMod.Settings.channelNames.getValue());
+        
+
+    }
+
     function logCallback(val){
         this.logDebug("twitch log: " + val);
     }

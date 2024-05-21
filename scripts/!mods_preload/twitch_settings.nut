@@ -8,23 +8,15 @@
     testPage.addDivider("dividertest");
 
     //TwitchBres.Settings.Textfield
-    local buttonTest = testPage.addButtonSetting("TestButton", "Click Me", null);
-    ::Const.TwitchMod.DescriptionTest = buttonTest;
-    buttonTest.addCallback(function(_data = null){
-        this.logInfo("Button " + this.ID + " was pressed");
-        buttonTest.setDescription(buttonTest.Description + " TBD");
-    });
+    ::Const.TwitchMod.Settings <- {
+        channelNames = testPage.addStringSetting("Cannels", "", null)
+    }
 
-    local buttonTest = testPage.addButtonSetting("TwitchConnect", "Connect", null);
-    buttonTest.addCallback(function(_data = null){
-        this.logInfo("Connect " + this.ID + " was pressed");
-        ::Const.TwitchInterface.connect();
-    });
-
-    local buttonTest = testPage.addButtonSetting("TwitchSend", "Send Message", null);
-    buttonTest.addCallback(function(_data = null){
-        this.logInfo("Send " + this.ID + " was pressed");
-        ::Const.TwitchInterface.sendMessage("JOIN #Bonjwa");
-    });
+    ::Const.TwitchMod.Settings.channelNames.addAfterChangeCallback(function ( _oldValue )
+    {
+        if(::Const.TwitchInterface.m.JSHandle){
+            ::Const.TwitchInterface.m.JSHandle.asyncCall("initTwitchClient", null);
+        }
+    })
 
 }

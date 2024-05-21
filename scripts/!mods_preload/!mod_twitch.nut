@@ -14,6 +14,7 @@
 {
     ::TwitchBres.Mod <- ::MSU.Class.Mod( ::TwitchBres.ID, ::TwitchBres.Version, ::TwitchBres.Name);
     ::mods_registerJS("twitch/promise.js");
+    ::mods_registerJS("twitch/utils.js");
     ::mods_registerJS("twitch/tmi_es5/lib/utils.js");
     ::mods_registerJS("twitch/tmi_es5/lib/commands.js");
     ::mods_registerJS("twitch/tmi_es5/lib/events.js");
@@ -31,9 +32,8 @@
     this.logDebug("twitch test: JS");
     ::Const.TwitchMod.addSettings();
 
-    local gt = this.getroottable();
-    gt.Const.TwitchInterface <- this.new("scripts/ui/twitch_interface");
-    
+    ::Const.TwitchInterface <- this.new("scripts/ui/twitch_interface");
+    ::MSU.UI.registerConnection(::Const.TwitchInterface);
 
 
 })
