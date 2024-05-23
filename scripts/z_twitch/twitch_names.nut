@@ -5,7 +5,8 @@
 			::Const.TwitchInterface.transferNames();
 		}
 
-		this.m.Name = ::Const.TwitchInterface.m.TwitchNames.List[this.Math.rand(0, ::Const.TwitchInterface.m.TwitchNames.List.len() - 1)];
+		if(::Const.TwitchInterface.m.TwitchNames.List.len())
+			this.m.Name = ::Const.TwitchInterface.m.TwitchNames.List[this.Math.rand(0, ::Const.TwitchInterface.m.TwitchNames.List.len() - 1)];
 		local res = oldFunc(_backgrounds, _addTraits);
 		return res;
 	}
