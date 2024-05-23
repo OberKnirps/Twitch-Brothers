@@ -5,6 +5,10 @@ var TwitchInterface = function()
     this.mSQHandle = null;
     this.twitch_client = null;
     this.TwitchNames = [];
+    //this.ModNames =[];
+    //this.SubNames =[];
+    this.IgnoreNames =[];
+    this.BlackList =[];
     this.options = {
       options: {
         debug: false,
@@ -57,7 +61,13 @@ TwitchInterface.prototype.initTwitchClient = function ()
     var thisTI = this;
     this.twitch_client = new client( this.options );
         this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
-            if(!thisTI.TwitchNames.includes(userstate["display-name"])){ //if(this.TwitchNames.indexOf(message.tags["display-name"]) !== -1){
+            if(!thisTI.TwitchNames.includes(userstate["display-name"]) && !thisTI.IgnoreNames.includes(userstate["display-name"])){
+                for(var i = 0; i < thisTI.BlackList.length; i++){ 
+                    if(userstate["display-name"].includes(thisTI.BlackList[i])) {
+                        thisTI.IgnoreNames.push(userstate["display-name"]);
+                        return;
+                    }
+                }
                 thisTI.TwitchNames.push(userstate["display-name"]);
                 SQ.call(thisTI.mSQHandle, "namesDirtyCallback",null);
             }
@@ -76,6 +86,13 @@ TwitchInterface.prototype.transferNames = function (_TwitchNames)
 TwitchInterface.prototype.updateChannels = function (_channels)
 {
     this.options.channels = _channels.split(/[ ,;]+/);
+}
+
+TwitchInterface.prototype.updateBlacklist = function(_names)
+{
+    var thisTI = this;
+    thisTI.BlackList = [];
+    _names.split(/[ ,;]+/).forEach(function(_exp){thisTI.BlackList.push(new RegExp(_exp,"i"))});
 }
 
 TwitchInterface.prototype.onConnection = function (_handle)

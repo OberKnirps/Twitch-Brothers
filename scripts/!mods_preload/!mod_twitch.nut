@@ -1,6 +1,6 @@
 ::TwitchBres <- {
     ID = "mod_twitch_brothers",
-    Version = "0.1.0",
+    Version = "0.2.0",
     Name = "Twitch Brothers"
 };
 ::Const.TwitchMod <- {
@@ -28,12 +28,9 @@
     //::TwitchBres.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/");
     //::TwitchBres.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
-
-    this.logDebug("twitch test: JS");
-    ::Const.TwitchMod.addSettings();
-
     ::Const.TwitchInterface <- this.new("scripts/ui/twitch_interface");
     ::MSU.UI.registerConnection(::Const.TwitchInterface);
 
+    ::Const.TwitchMod.addSettings();
 
 })

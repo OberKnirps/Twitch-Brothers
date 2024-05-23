@@ -30,6 +30,7 @@ this.twitch_interface <- {
     {
         this.m.JSHandle = ::UI.connect("TwitchInterface",this);
         this.m.JSHandle.asyncCall("initTwitchClient", null);
+        this.updateBlacklist();
     }
 
     function updateChannels(){
@@ -52,6 +53,16 @@ this.twitch_interface <- {
 
     function namesDirtyCallback(){
         this.m.TwitchNames.dirty = true;
+    }
+
+    function updateBlacklist(){
+        if(::Const.TwitchInterface.m.JSHandle){
+            if(::Const.TwitchMod.Settings.blacklistedBots.getValue()){
+                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", "Nightbot, Streamlabs, Moobot, StreamElements, Wizebot, PhantomBot, Stay_Hydrated_Bot, TidyLabs ," + ::Const.TwitchMod.Settings.blacklistedNames.getValue());
+            }else{
+                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::Const.TwitchMod.Settings.blacklistedNames);
+            }
+        }
     }
 
 };
