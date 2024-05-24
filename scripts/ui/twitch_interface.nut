@@ -1,3 +1,4 @@
+//contains things that will be passed from js, passed to js and the functions to do that
 this.twitch_interface <- {
     m = {
         JSHandle = null,
@@ -9,10 +10,11 @@ this.twitch_interface <- {
 
     function create()
     {
-        this.logDebug("twitch test: create");
+        //this.connect();
 
     }
-        function onInit()
+    
+    function onInit()
     {
         this.logDebug("twitch test: init");
 
@@ -34,8 +36,8 @@ this.twitch_interface <- {
     }
 
     function updateChannels(){
-        this.m.JSHandle.asyncCall("updateChannels",::Const.TwitchMod.Settings.channelNames.getValue());
-        this.logDebug("updateChannels: " + ::Const.TwitchMod.Settings.channelNames.getValue());
+        this.m.JSHandle.asyncCall("updateChannels",::TwitchBrothers.Content.Settings.channelNames.getValue());
+        this.logDebug("updateChannels: " + ::TwitchBrothers.Content.Settings.channelNames.getValue());
     }
 
     function logCallback(val){
@@ -57,12 +59,19 @@ this.twitch_interface <- {
 
     function updateBlacklist(){
         if(::Const.TwitchInterface.m.JSHandle){
-            if(::Const.TwitchMod.Settings.blacklistedBots.getValue()){
-                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", "Nightbot, Streamlabs, Moobot, StreamElements, Wizebot, PhantomBot, Stay_Hydrated_Bot, TidyLabs ," + ::Const.TwitchMod.Settings.blacklistedNames.getValue());
+            if(::TwitchBrothers.Content.Settings.blacklistedBots.getValue()){
+                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", "Nightbot, Streamlabs, Moobot, StreamElements, Wizebot, PhantomBot, Stay_Hydrated_Bot, TidyLabs ," + ::TwitchBrothers.Content.Settings.blacklistedNames.getValue());
             }else{
-                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::Const.TwitchMod.Settings.blacklistedNames);
+                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::TwitchBrothers.Content.Settings.blacklistedNames);
             }
         }
+    }
+
+    function testCallback(_data){
+        this.logDebug("Something:");
+        this.logDebug("x: " + _data.x);
+        this.logDebug("y: " + _data.y);
+        this.logDebug("z: " + _data.z);
     }
 
 };
