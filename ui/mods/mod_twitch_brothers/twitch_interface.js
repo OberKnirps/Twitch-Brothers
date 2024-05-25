@@ -4,8 +4,8 @@ var TwitchInterface = function()
 {
     this.mSQHandle = null;
     this.twitch_client = null;
-    this.TwitchNames = [];
-    this.IgnoreNames =[];
+    this.TwitchNames = {};
+    this.IgnoreIDs =[];
     this.BlackList =[];
     this.options = {
       options: {
@@ -59,15 +59,19 @@ TwitchInterface.prototype.initTwitchClient = function ()
     var thisTI = this;
     this.twitch_client = new client( this.options );
         this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
-            if(!thisTI.TwitchNames.includes(userstate["display-name"]) && !thisTI.IgnoreNames.includes(userstate["display-name"])){
+            if(!thisTI.TwitchNames.hasOwnProperty(userstate["display-name"]) && !thisTI.IgnoreIDs.includes(userstate["display-name"])){
                 for(var i = 0; i < thisTI.BlackList.length; i++){ 
                     if(userstate["display-name"].includes(thisTI.BlackList[i])) {
-                        thisTI.IgnoreNames.push(userstate["display-name"]);
+                        thisTI.IgnoreIDs.push(userstate["display-name"]);
                         return;
                     }
                 }
-                thisTI.TwitchNames.push(userstate["display-name"]);
-                SQ.call(thisTI.mSQHandle, "namesDirtyCallback",null);
+                thisTI.TwitchNames[userstate["display-name"]] = {"TwitchID":userstate["display-name"], "Name": ""};
+                SQ.call(thisTI.mSQHandle, "addTwitchName",thisTI.TwitchNames[userstate["display-name"]]);
+            }
+            if(message.includes("!bbname ")){ //TODO make customisable in settings
+                thisTI.TwitchNames[userstate["display-name"]].Name = message.split("!bbname ")[1];
+                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["display-name"]]);
             }
         }
     );
