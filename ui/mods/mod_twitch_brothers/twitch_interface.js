@@ -57,6 +57,9 @@ TwitchInterface.prototype.initTwitchClient = function ()
 {
     SQ.call(this.mSQHandle, "updateChannels", null);
     var thisTI = this;
+    if(this.twitch_client != null){
+        this.twitch_client.disconnect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
+    }
     this.twitch_client = new client( this.options );
         this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
             if(!thisTI.TwitchNames.hasOwnProperty(userstate["display-name"]) && !thisTI.IgnoreIDs.includes(userstate["display-name"])){
