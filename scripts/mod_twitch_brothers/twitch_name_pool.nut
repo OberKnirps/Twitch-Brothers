@@ -16,12 +16,59 @@ this.twitch_name_pool <-{
 		if(!this.updateEntry(_data)){
             this.m.Data[_data.TwitchID] <- this.new("scripts/mod_twitch_brothers/twitch_name_object");
             this.m.Data[_data.TwitchID].initWithData(_data, _live);
+            this.m.Data[_data.TwitchID].ParentTable = this;
         }
+	}
+
+	function deleteEntry(_TwitchID){
+		return delete this.m.Data[_TwitchID];
 	}
 	function len(){
 		return this.m.Data.len();
 	}
 	function randValue(){
 		return ::MSU.Table.randValue(this.m.Data);
+	}
+
+
+	function onSerialize(_out){
+		//serialize this.m.Data.len()
+		//::MSU.Utils.serialize(this.m.Data.len(), _out);
+		_out.writeU8(::MSU.Utils.DataType.Integer);
+		_out.writeBool(false);
+		_out.writeI32(this.m.Data.len());
+
+		foreach (entry in this.m.Data){
+			entry.onSerialize(_out)
+		}
+
+    }
+
+    function onDeserialize(_in)
+	{
+		if (this.m.Data.len()){
+			this.logDebug("This name pool shoudnt conain any entries! Clearing it now to avoid contamination.");
+			this.m.Data.clear();
+		}
+
+		//deserialize this.m.Data.len()
+		//local len = ::MSU.Utils.deserialize(_in);
+		_in.readU8();
+
+		local len = _in.readBool() ? _in.readI32() : _in.readU32();
+		this.logDebug("Poollen: " + len);
+
+		
+		for (local i = 0; i < len; i++){
+			this.logDebug("i: " + i);
+			this.logDebug("this.len: " + this.m.Data.len());
+
+	        local name_object = this.new("scripts/mod_twitch_brothers/twitch_name_object");
+	        name_object.ParentTable = this;
+	        name_object.onDeserialize(_in);
+	        this.m.Data[name_object.TwitchID] <- name_object;
+			this.logDebug("TID: " + name_object.TwitchID);
+
+		}
 	}
 };

@@ -3,9 +3,10 @@ this.twitch_interface <- {
     m = {
         JSHandle = null,
         TwitchNames = {
-            Pool  = null,
-            Hired = null,
-            Dead  = null
+            Pool     = null,
+            Hired    = null,
+            Dead     = null,
+            Retired  = null
         } 
     },
 
@@ -14,6 +15,7 @@ this.twitch_interface <- {
         this.m.TwitchNames.Pool = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
         this.m.TwitchNames.Hired = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
         this.m.TwitchNames.Dead = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
+        this.m.TwitchNames.Retired = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
     }
     
     function onInit()
@@ -47,7 +49,13 @@ this.twitch_interface <- {
     }
 
     function updateNameCounter(){
-        ::TwitchBrothers.Content.Settings.channelNames.setDescription("Number of currently tracked names: " + this.m.TwitchNames.Pool.len());
+        ::TwitchBrothers.Content.Settings.channelNames.setDescription(
+            "Tracked names: " + (this.m.TwitchNames.Pool.len()+this.m.TwitchNames.Hired.len()+this.m.TwitchNames.Dead.len()+this.m.TwitchNames.Retired.len())
+            + "\nFree: " + this.m.TwitchNames.Pool.len()
+            + "\nHired: " + this.m.TwitchNames.Hired.len()
+            + "\nDead: " + this.m.TwitchNames.Dead.len()
+            + "\nRetired: " + this.m.TwitchNames.Retired.len()
+            );
     }
 
     function updateBlacklist(){
@@ -82,7 +90,90 @@ this.twitch_interface <- {
         this.m.TwitchNames.Pool.updateEntry(_data);
         this.m.TwitchNames.Hired.updateEntry(_data);
         this.m.TwitchNames.Dead.updateEntry(_data);
+        this.m.TwitchNames.Retired.updateEntry(_data);
         this.updateNameCounter();
+    }
+
+    function nameToNamePool(_name_object,_name_pool)
+    {
+        local parentTab = _name_object.ParentTable;
+        _name_pool.addEntry(_name_object.ParentTable.deleteEntry(_name_object.TwitchID));
+        this.updateNameCounter();
+    }
+
+    function twitchIDToNamePool(_TwitchID,_name_pool)
+    {
+        if(_TwitchID.len() == 0)
+            return;
+        local name_obj = ::Const.TwitchInterface.lookupName(_TwitchID);
+        if(name_obj == null){
+            this.logError("Tried to move name to "+ _name_pool.tostring() +": " + _TwitchID + " is not in any name pool!");
+        }else{
+            ::Const.TwitchInterface.nameToNamePool(name_obj,_name_pool);              
+        }
+    }
+
+    function lookupName(_TwitchID)
+    {
+        if(_TwitchID in this.m.TwitchNames.Pool.m.Data)
+            return this.m.TwitchNames.Pool.m.Data[_TwitchID];
+        if(_TwitchID in this.m.TwitchNames.Hired.m.Data)
+            return this.m.TwitchNames.Hired.m.Data[_TwitchID];
+        if(_TwitchID in this.m.TwitchNames.Dead.m.Data)
+            return this.m.TwitchNames.Dead.m.Data[_TwitchID];
+        if(_TwitchID in this.m.TwitchNames.Retired.m.Data)
+            return this.m.TwitchNames.Retired.m.Data[_TwitchID];
+        return null;
+    }
+
+    function giveBroNewTwitchName(_bro){
+        if(::Const.TwitchInterface.m.TwitchNames.Pool.len()){
+            local elem = ::Const.TwitchInterface.m.TwitchNames.Pool.randValue();
+            if(_bro.m.TwitchID.len() == 0)
+                _bro.m.OriginalName = _bro.m.Name;
+            _bro.setName(elem.getName());
+            _bro.m.TwitchID = elem.TwitchID;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function onSerialize(_out){
+        local serializationEmulator = ::TwitchBrothers.MSU.Serialization.getSerializationEmulator("TwitchInterface");
+        this.m.TwitchNames.Hired.onSerialize(serializationEmulator);
+        this.m.TwitchNames.Dead.onSerialize(serializationEmulator);
+        this.m.TwitchNames.Retired.onSerialize(serializationEmulator);
+        //::TwitchBrothers.MSU.Serialization.flagSerialize("Hired", this.m.TwitchNames.Hired);
+        //::TwitchBrothers.MSU.Serialization.flagSerialize("Dead", this.m.TwitchNames.Dead);
+        //::TwitchBrothers.MSU.Serialization.flagSerialize("Retired", this.m.TwitchNames.Retired);
+
+    }
+
+    function onDeserialize(_in){
+        local deserializationEmulator = ::TwitchBrothers.MSU.Serialization.getDeserializationEmulator("TwitchInterface");
+        this.m.TwitchNames.Hired.onDeserialize(deserializationEmulator);
+        this.m.TwitchNames.Dead.onDeserialize(deserializationEmulator);
+        this.m.TwitchNames.Retired.onDeserialize(deserializationEmulator);
+
+        //update loaded pools with tracked names
+        foreach (name in this.m.TwitchNames.Hired.m.Data){
+            if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
+                this.nameToNamePool(name,this.m.TwitchNames.Hired);
+            }
+        }
+        
+        foreach (name in this.m.TwitchNames.Dead.m.Data){
+            if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
+                this.nameToNamePool(name,this.m.TwitchNames.Dead);
+            }
+        }
+        
+        foreach (name in this.m.TwitchNames.Retired.m.Data){
+            if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
+                this.nameToNamePool(name,this.m.TwitchNames.Retired);
+            }
+        }        
     }
 
 };

@@ -6,7 +6,7 @@
 };
 
 ::TwitchBrothers.Mod <- ::Hooks.register(::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
-::TwitchBrothers.Mod.require("mod_msu(>=1.0.3)");
+::TwitchBrothers.Mod.require("mod_msu(>=1.2.7)");
 ::TwitchBrothers.Mod.queue(">mod_msu", function()
 {
     ::TwitchBrothers.MSU <- ::MSU.Class.Mod( ::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
@@ -31,6 +31,9 @@
     ::MSU.UI.registerConnection(::Const.TwitchInterface);
 
     ::TwitchBrothers.Content.addSettings();
-    ::TwitchBrothers.Content.hookPlayer();
+    ::TwitchBrothers.Content.hook_player();
+    ::TwitchBrothers.Content.hook_character_screen();
+    ::TwitchBrothers.Content.hook_asset_manager();
+    ::TwitchBrothers.Content.hook_world_state();
 
 })
