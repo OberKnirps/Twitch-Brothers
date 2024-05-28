@@ -73,6 +73,12 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 SQ.call(thisTI.mSQHandle, "addTwitchName",thisTI.TwitchNames[userstate["display-name"]]);
             }
             if(message.includes("!bbname ")){ //TODO make customisable in settings
+                var nameFromMessage = message.split("!bbname ")[1];
+                for(var i = 0; i < thisTI.BlackList.length; i++){ 
+                    if(nameFromMessage.includes(thisTI.BlackList[i])) {
+                        return;
+                    }
+                }
                 thisTI.TwitchNames[userstate["display-name"]].Name = message.split("!bbname ")[1];
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["display-name"]]);
             }
