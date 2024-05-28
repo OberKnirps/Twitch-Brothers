@@ -1,6 +1,6 @@
 ::TwitchBrothers <- {
     ID = "mod_twitch_brothers",
-    Version = "0.2.0",
+    Version = "0.2.1",
     Name = "Twitch Brothers",
     Content = {}
 };
