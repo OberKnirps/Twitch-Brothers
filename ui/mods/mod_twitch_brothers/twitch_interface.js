@@ -74,6 +74,10 @@ TwitchInterface.prototype.initTwitchClient = function ()
             }
             if(message.includes("!bbname ")){ //TODO make customisable in settings
                 var nameFromMessage = message.split("!bbname ")[1];
+                //filter some special/controll characters, just to be safe
+                nameFromMessage.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "")
+
+                //check custom name for blacklist
                 for(var i = 0; i < thisTI.BlackList.length; i++){ 
                     if(nameFromMessage.includes(thisTI.BlackList[i])) {
                         return;
