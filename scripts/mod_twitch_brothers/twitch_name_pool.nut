@@ -65,4 +65,26 @@ this.twitch_name_pool <-{
 
 		}
 	}
+
+	function onDeserialize020(_in)
+	{
+		if (this.m.Data.len()){
+			this.logDebug("This name pool shoudn't contain any entries! Clearing it now to avoid contamination.");
+			this.m.Data.clear();
+		}
+
+		//deserialize this.m.Data.len()
+		//local len = ::MSU.Utils.deserialize(_in);
+		_in.readU8();
+
+		local len = _in.readBool() ? _in.readI32() : _in.readU32();
+		
+		for (local i = 0; i < len; i++){
+	        local name_object = this.new("scripts/mod_twitch_brothers/twitch_name_object");
+	        name_object.ParentTable = this;
+	        name_object.onDeserialize020(_in);
+	        this.m.Data[name_object.TwitchID] <- name_object;
+
+		}
+	}
 };

@@ -28,11 +28,9 @@ this.twitch_name_object <- {
 
 	function onSerialize(_out)
 	{
-		//BUG: on '고려견' ?
-
-        this.logDebug("Call serialize name object");
+        /*this.logDebug("Call serialize name object");
         this.logDebug("TID: " + this.TwitchID);
-        this.logDebug("Name: " + this.Name);
+        this.logDebug("Name: " + this.Name);*/
 		//serialize this.TwitchID
 		//::MSU.Utils.serialize(this.TwitchID, _out);
 		_out.writeU8(::MSU.Utils.DataType.String);
@@ -49,29 +47,32 @@ this.twitch_name_object <- {
 
 	function onDeserialize(_in)
 	{ 
-        if(::TwitchBrothers.MSU.Serialization.isSavedVersionAtLeast("0.2.1", _in.getMetaData())){
-			//deserialize this.TwitchID
-			_in.readU8();
-			this.TwitchID =_in.readString();
-			//deserialize this.Namme
-			_in.readU8();
-			this.Name =_in.readString();	
-			//deserialize this.Title
-			_in.readU8();
-			this.Title =_in.readString();	
-			this.Live = false;
-		}else{
-			//was v0.2.0
-			//deserialize this.TwitchID; change to lowercase to comply with standard of 0.2.1 
-			_in.readU8();
-			this.TwitchID =_in.readString().tolower();
-			//deserialize this.Namme
-			_in.readU8();
-			this.Name =_in.readString();
-			this.Title ="";	
-			this.Live = false;
-			
-		}
+    	this.logDebug("0.2.1");
+    	this.logDebug(_in.getMetaData().getString(::TwitchBrothers.MSU.getID() + "Version"));
+		//deserialize this.TwitchID
+		_in.readU8();
+		this.TwitchID =_in.readString();
+		//deserialize this.Namme
+		_in.readU8();
+		this.Name =_in.readString();	
+		//deserialize this.Title
+		_in.readU8();
+		this.Title =_in.readString();	
+		this.Live = false;
+	}
+
+	function onDeserialize020(_in)
+	{ 
+    	this.logDebug("Deserialize 0.2.0");
+		//was v0.2.0
+		//deserialize this.TwitchID; change to lowercase to comply with standard of 0.2.1 
+		_in.readU8();
+		this.TwitchID =_in.readString().tolower();
+		//deserialize this.Namme
+		_in.readU8();
+		this.Name =_in.readString();
+		this.Title ="";	
+		this.Live = false;
 	}
 
 };
