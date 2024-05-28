@@ -80,7 +80,7 @@ this.twitch_interface <- {
     }
 
     function addTwitchName(_data){
-        if(!this.m.TwitchNames.Hired.updateEntry(_data) && !this.m.TwitchNames.Dead.updateEntry(_data)){
+        if(!this.m.TwitchNames.Hired.updateEntry(_data) && !this.m.TwitchNames.Dead.updateEntry(_data) && !this.m.TwitchNames.Retired.updateEntry(_data)){
             !this.m.TwitchNames.Pool.addEntry(_data);
         }
         this.updateNameCounter();
