@@ -41,19 +41,37 @@ this.twitch_name_object <- {
 		//::MSU.Utils.serialize(this.Name, _out);
 		_out.writeU8(::MSU.Utils.DataType.String);
 		_out.writeString(this.Name);
+
+		//serialize this.Title
+		_out.writeU8(::MSU.Utils.DataType.String);
+		_out.writeString(this.Title);
 	}
 
 	function onDeserialize(_in)
 	{ 
-		//deserialize this.Name
-		//this.TwitchID = ::MSU.Utils.deserialize(_in);
-		_in.readU8();
-		this.TwitchID =_in.readString();
-		//deserialize this.TwitchID
-		//this.Name = ::MSU.Utils.deserialize(_in);
-		_in.readU8();
-		this.Name =_in.readString();	
-		this.Live = false;
+        if(::TwitchBrothers.MSU.Serialization.isSavedVersionAtLeast("0.2.1", _in.getMetaData())){
+			//deserialize this.TwitchID
+			_in.readU8();
+			this.TwitchID =_in.readString();
+			//deserialize this.Namme
+			_in.readU8();
+			this.Name =_in.readString();	
+			//deserialize this.Title
+			_in.readU8();
+			this.Title =_in.readString();	
+			this.Live = false;
+		}else{
+			//was v0.2.0
+			//deserialize this.TwitchID; change to lowercase to comply with standard of 0.2.1 
+			_in.readU8();
+			this.TwitchID =_in.readString().tolower();
+			//deserialize this.Namme
+			_in.readU8();
+			this.Name =_in.readString();
+			this.Title ="";	
+			this.Live = false;
+			
+		}
 	}
 
 };
