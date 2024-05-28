@@ -16,6 +16,8 @@
 - MSU: https://www.nexusmods.com/battlebrothers/mods/42
   - Requires Modding script Hooks: https://www.nexusmods.com/battlebrothers/mods/479
 - Modern Hooks: https://www.nexusmods.com/battlebrothers/mods/685
+- Optional \(needed if you want to save mod settings please read their description\)
+  - BBParser: https://github.com/MSUTeam/BBParser/wiki/BBParser
 
 # Changelog:
 
