@@ -1,6 +1,7 @@
 this.twitch_name_object <- {
 	TwitchID = "",
 	Name = "",
+	Title = "",
 	ParentTable = null,
 	Live = false,
 	
@@ -11,6 +12,7 @@ this.twitch_name_object <- {
 	function initWithData(_data, _live = true){
 		this.TwitchID = _data.TwitchID;
 		this.Name = _data.Name;
+		this.Title = _data.Title;
 		this.Live = _live;
 		if("Live" in _data)
 			this.Live = _data.Live;

@@ -98,7 +98,7 @@ this.twitch_interface <- {
         local toRemove = this.lookupName(_TwitchID);
         if(toRemove != null){
             local removed = toRemove.ParentTable.deleteEntry(toRemove.TwitchID);
-            this.logDebug("Removed: " removed.Name);
+            //this.logDebug("Removed: "+ removed.TwitchID);
         }
         this.updateNameCounter();
     }
@@ -141,6 +141,8 @@ this.twitch_interface <- {
             if(_bro.m.TwitchID.len() == 0)
                 _bro.m.OriginalName = _bro.m.Name;
             _bro.setName(elem.getName());
+            if(_bro.m.Title.len()==0 && elem.Title)
+                _bro.setTitle(elem.Title);
             _bro.m.TwitchID = elem.TwitchID;
             return true;
         }else{

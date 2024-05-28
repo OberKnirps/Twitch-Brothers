@@ -62,24 +62,34 @@ TwitchInterface.prototype.initTwitchClient = function ()
     }
     this.twitch_client = new client( this.options );
     this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
-        if(!thisTI.TwitchNames.hasOwnProperty(channel) && !thisTI.IgnoreIDs.includes(channel)){
+        if(!thisTI.TwitchNames.hasOwnProperty(userstate["username"]) && !thisTI.IgnoreIDs.includes(userstate["username"])){
             for(var i = 0; i < thisTI.BlackList.length; i++){ 
-                if(channel.includes(thisTI.BlackList[i])) {
-                    thisTI.IgnoreIDs.push(channel);
+                if(userstate["username"].includes(thisTI.BlackList[i])) {
+                    thisTI.IgnoreIDs.push(userstate["username"]);
                     return;
                 }
             }
-            thisTI.TwitchNames[channel] = {"TwitchID":channel, "Name": userstate["display-name"]};
-            SQ.call(thisTI.mSQHandle, "addTwitchName",thisTI.TwitchNames[channel]);
+            thisTI.TwitchNames[userstate["username"]] = {"TwitchID":userstate["username"], "Name": userstate["display-name"], "Title": ""};
+            SQ.call(thisTI.mSQHandle, "addTwitchName",thisTI.TwitchNames[userstate["username"]]);
         }
 
+        /*testcode
+        message = " !bbname UltraKnirps !bbtitle the Author";
+        SQ.call(thisTI.mSQHandle, "logCallback","Name: "+ userstate["username"]);
+        */
+        
         //commands
-        var commandList = message.split(/(?=!)/g);
-        commandList.forEach( function(str){
-            if(message.includes("!bbname ")){ //TODO make customisable in settings
-                var commandBody = message.split("!bbname ")[1];
+        var commandList = message.split(/ (?=!)/g);
+        commandList.forEach( function(_str){
+            if(typeof _str != "string"){
+                SQ.call(thisTI.mSQHandle, "logCallback","commandBody: "+ str);
+                return;
+            }
+
+            if(_str.includes("!bbname ")){ //TODO make customisable in settings
+                var commandBody = _str.split("!bbname ")[1];
                 //filter some special/controll characters, just to be safe
-                commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "")
+                commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
 
                 //check custom name for blacklist
                 for(var i = 0; i < thisTI.BlackList.length; i++){ 
@@ -87,29 +97,41 @@ TwitchInterface.prototype.initTwitchClient = function ()
                         return;
                     }
                 }
-                thisTI.TwitchNames[channel].Name = message.split("!bbname ")[1];
-                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[channel]);
+                thisTI.TwitchNames[userstate["username"]].Name = commandBody;
+                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
                 return;
 
-            }else if(message.includes("!bbclear ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
-                var commandBody = message.split(/!bbclear | /)[1];
-                thisTI.TwitchNames[commandBody].Name = commandBody;
-                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[channel]);
+            }else if(_str.includes("!bbtitle ")){
+                var commandBody = _str.split(/!bbtitle /)[1];
+                //filter some special/controll characters, just to be safe
+                commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
 
-            }else if(message.includes("!bbblock ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
-                var commandBody = message.split("!bbblock ")[1];
-                    thisTI.IgnoreIDs.push(channel);
-                    delete thisTI.TwitchNames[channel];
-                    SQ.call(thisTI.mSQHandle, "deleteTwitchName",channel);
+                thisTI.TwitchNames[userstate["username"]].Title = commandBody;
+                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
+
+
+            }else if(_str.includes("!bbclear ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
+                var commandBody = _str.split(/!bbclear +@*| /)[1].toLowerCase();
+                thisTI.TwitchNames[commandBody].Name = commandBody;
+                thisTI.TwitchNames[commandBody].Title = "";
+                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[commandBody]);
+
+
+            }else if(_str.includes("!bbblock ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
+                var commandBody = _str.split(/!bbblock +@*| /)[1].toLowerCase();
+                thisTI.IgnoreIDs.push(commandBody);
+                delete thisTI.TwitchNames[commandBody];
+                SQ.call(thisTI.mSQHandle, "deleteTwitchName",commandBody);
+
             }
         })
         
     });
 
-    this.twitch_client.on( 'ban', function( channel, msg, reason ) {
-        thisTI.IgnoreIDs.push(channel);
-        delete thisTI.TwitchNames[channel];
-        SQ.call(thisTI.mSQHandle, "deleteTwitchName",channel);
+    this.twitch_client.on( 'ban', function( channel, username, reason ) {
+        thisTI.IgnoreIDs.push(username);
+        delete thisTI.TwitchNames[username];
+        SQ.call(thisTI.mSQHandle, "deleteTwitchName",username);
     });
 
     this.twitch_client.connect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
