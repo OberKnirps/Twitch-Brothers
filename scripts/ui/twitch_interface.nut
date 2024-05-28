@@ -80,7 +80,7 @@ this.twitch_interface <- {
     }
 
     function addTwitchName(_data){
-        if(!this.m.TwitchNames.Hired.updateEntry(_data) && !this.m.TwitchNames.Dead.updateEntry(_data) && !this.m.TwitchNames.Retired.updateEntry(_data)){
+        if(!this.m.TwitchNames.Hired.updateEntry(_data) && !this.m.TwitchNames.Dead.updateEntry(_data)){
             !this.m.TwitchNames.Pool.addEntry(_data);
         }
         this.updateNameCounter();
@@ -91,6 +91,15 @@ this.twitch_interface <- {
         this.m.TwitchNames.Hired.updateEntry(_data);
         this.m.TwitchNames.Dead.updateEntry(_data);
         this.m.TwitchNames.Retired.updateEntry(_data);
+        this.updateNameCounter();
+    }
+    
+    function deleteTwitchName(_TwitchID){
+        local toRemove = this.lookupName(_TwitchID);
+        if(toRemove != null){
+            local removed = toRemove.ParentTable.deleteEntry(toRemove.TwitchID);
+            this.logDebug("Removed: " removed.Name);
+        }
         this.updateNameCounter();
     }
 
