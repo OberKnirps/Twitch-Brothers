@@ -74,22 +74,21 @@ TwitchInterface.prototype.initTwitchClient = function ()
         }
 
         /*testcode
-        message = " !bbname UltraKnirps !bbtitle the Author";
+        message = " !bbname UltraKnirps !bbtitle the.Author";
         SQ.call(thisTI.mSQHandle, "logCallback","Name: "+ userstate["username"]);
         */
-        
+
         //commands
         var commandList = message.split(/ (?=!)/g);
         commandList.forEach( function(_str){
             if(typeof _str != "string"){
-                SQ.call(thisTI.mSQHandle, "logCallback","commandBody: "+ str);
                 return;
             }
 
             if(_str.includes("!bbname ")){ //TODO make customisable in settings
                 var commandBody = _str.split("!bbname ")[1];
                 //filter some special/controll characters, just to be safe
-                commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
+                commandBody = commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
 
                 //check custom name for blacklist
                 for(var i = 0; i < thisTI.BlackList.length; i++){ 
@@ -104,7 +103,8 @@ TwitchInterface.prototype.initTwitchClient = function ()
             }else if(_str.includes("!bbtitle ")){
                 var commandBody = _str.split(/!bbtitle /)[1];
                 //filter some special/controll characters, just to be safe
-                commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
+                commandBody = commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
+
 
                 thisTI.TwitchNames[userstate["username"]].Title = commandBody;
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
