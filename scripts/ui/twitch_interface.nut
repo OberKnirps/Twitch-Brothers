@@ -104,8 +104,7 @@ this.twitch_interface <- {
     }
 
     function nameToNamePool(_name_object,_name_pool)
-    {
-        local parentTab = _name_object.ParentTable;
+    { 
         _name_pool.addEntry(_name_object.ParentTable.deleteEntry(_name_object.TwitchID));
         this.updateNameCounter();
     }
@@ -171,21 +170,22 @@ this.twitch_interface <- {
             //update loaded pools with tracked names
             foreach (name in this.m.TwitchNames.Hired.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Hired);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Dead.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Dead);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Retired.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Retired);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
                 }
-            }   
+            } 
+            this.updateNameCounter();  
         }else{
             //v0.2.0 to v0.2.1
             local deserializationEmulator = ::TwitchBrothers.MSU.Serialization.getDeserializationEmulator("TwitchInterface");
@@ -196,21 +196,22 @@ this.twitch_interface <- {
             //update loaded pools with tracked names
             foreach (name in this.m.TwitchNames.Hired.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Hired);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Dead.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Dead);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Retired.m.Data){
                 if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(name,this.m.TwitchNames.Retired);
+                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
                 }
-            }  
+            } 
+            this.updateNameCounter();   
         }     
     }
 
