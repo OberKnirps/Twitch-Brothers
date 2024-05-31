@@ -46,9 +46,7 @@ this.twitch_name_object <- {
 	}
 
 	function onDeserialize(_in)
-	{ 
-    	this.logDebug("0.2.1");
-    	this.logDebug(_in.getMetaData().getString(::TwitchBrothers.MSU.getID() + "Version"));
+	{
 		//deserialize this.TwitchID
 		_in.readU8();
 		this.TwitchID =_in.readString();
