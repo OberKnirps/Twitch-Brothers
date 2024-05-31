@@ -1,14 +1,13 @@
 ::TwitchBrothers <- {
     ID = "mod_twitch_brothers",
-    Version = "0.2.1",
+    Version = "0.2.2",
     Name = "Twitch Brothers",
     Content = {}
 };
 
 ::TwitchBrothers.Mod <- ::Hooks.register(::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
 ::TwitchBrothers.Mod.require("mod_msu(>=1.2.7)");
-::TwitchBrothers.Mod.queue(">mod_msu", function()
-{
+::TwitchBrothers.Mod.queue(">mod_msu", function(){
     ::TwitchBrothers.MSU <- ::MSU.Class.Mod( ::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
 
     ::TwitchBrothers.MSU.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/OberKnirps/Twitch-Brothers");
@@ -35,5 +34,6 @@
     ::TwitchBrothers.Content.hook_character_screen();
     ::TwitchBrothers.Content.hook_asset_manager();
     ::TwitchBrothers.Content.hook_world_state();
+    ::TwitchBrothers.Content.hook_settlement();
 
 })
