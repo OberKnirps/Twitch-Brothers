@@ -7,6 +7,7 @@ var TwitchInterface = function()
     this.TwitchNames = {};
     this.IgnoreIDs =[];
     this.BlackList =[];
+    this.Settings = {};
     this.options = {
       options: {
         debug: false,
@@ -78,6 +79,10 @@ TwitchInterface.prototype.initTwitchClient = function ()
         SQ.call(thisTI.mSQHandle, "logCallback","Name: "+ userstate["username"]);
         */
 
+        var characterFilter = "";
+        if(thisTI.Settings.Filter)
+            characterFilter = /[|&;$%@<>(),.:\+\{\}\[\]\\\/]+/g;
+
         //commands
         var commandList = message.split(/ (?=!)/g);
         commandList.forEach( function(_str){
@@ -85,10 +90,13 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 return;
             }
 
-            if(_str.includes("!bbname ")){ //TODO make customisable in settings
-                var commandBody = _str.split("!bbname ")[1];
+            if(_str.includes("!"+thisTI.Settings.Commands.Name.String+" ")
+                && thisTI.Settings.Commands.Name.Enabled
+                && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Name.Role,"")))
+            {
+                var commandBody = _str.split("!"+thisTI.Settings.Commands.Name.String+" ")[1];
                 //filter some special/controll characters, just to be safe
-                commandBody = commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
+                commandBody = commandBody.replace(characterFilter, "");
 
                 //check custom name for blacklist
                 for(var i = 0; i < thisTI.BlackList.length; i++){ 
@@ -99,39 +107,59 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 thisTI.TwitchNames[userstate["username"]].Name = commandBody;
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
                 return;
-
-            }else if(_str.includes("!bbtitle ")){
-                var commandBody = _str.split(/!bbtitle /)[1];
+            }
+            else if(_str.includes("!"+thisTI.Settings.Commands.Title.String+" ")
+                && thisTI.Settings.Commands.Title.Enabled
+                && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Title.Role,"")))
+            {
+                var commandBody = _str.split("!"+thisTI.Settings.Commands.Title.String+" ")[1];
                 //filter some special/controll characters, just to be safe
-                commandBody = commandBody.replace(/[|&;$%@"'<>()+,.:{}\[\]]/g, "");
+                commandBody = commandBody.replace(characterFilter, "");
 
 
                 thisTI.TwitchNames[userstate["username"]].Title = commandBody;
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
 
 
-            }else if(_str.includes("!bbclear ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
-                var commandBody = _str.split(/!bbclear +@*| /)[1].toLowerCase();
-                thisTI.TwitchNames[commandBody].Name = commandBody;
-                thisTI.TwitchNames[commandBody].Title = "";
-                SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[commandBody]);
+            }
+            else if(_str.includes("!"+thisTI.Settings.Commands.Clear.String+" ")
+                && thisTI.Settings.Commands.Clear.Enabled
+                && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Clear.Role,"")))
+            {
+                var commandBody = _str.split("!"+thisTI.Settings.Commands.Clear.String+" ")[1];
+                commandBody = commandBody.replace(/[ @]+/g,"");
+                if(commandBody.toLowerCase() in thisTI.TwitchNames)
+                {
+                    thisTI.TwitchNames[commandBody.toLowerCase()].Name = commandBody;
+                    thisTI.TwitchNames[commandBody.toLowerCase()].Title = "";    
+                    SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[commandBody.toLowerCase()]);   
 
-
-            }else if(_str.includes("!bbblock ") && userstate["badges-raw"].includes(/broadcaster|moderator/)){
-                var commandBody = _str.split(/!bbblock +@*| /)[1].toLowerCase();
-                thisTI.IgnoreIDs.push(commandBody);
-                delete thisTI.TwitchNames[commandBody];
-                SQ.call(thisTI.mSQHandle, "deleteTwitchName",commandBody);
-
+                }
+            }
+            else if(_str.includes("!"+thisTI.Settings.Commands.Block.String+" ")
+                && thisTI.Settings.Commands.Block.Enabled
+                && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Block.Role,"")))
+            {
+                var commandBody = _str.split("!"+thisTI.Settings.Commands.Block.String+" ")[1].toLowerCase();
+                commandBody = commandBody.replace(/[ @]+/g,"");
+                if(commandBody in thisTI.TwitchNames)
+                {
+                    thisTI.IgnoreIDs.push(commandBody);
+                    delete thisTI.TwitchNames[commandBody];
+                    SQ.call(thisTI.mSQHandle, "deleteTwitchName",commandBody);  
+                }
             }
         })
         
     });
 
     this.twitch_client.on( 'ban', function( channel, username, reason ) {
-        thisTI.IgnoreIDs.push(username);
-        delete thisTI.TwitchNames[username];
-        SQ.call(thisTI.mSQHandle, "deleteTwitchName",username);
+        if(thisTI.Settings.AutoBan)
+        {
+            thisTI.IgnoreIDs.push(username);
+            delete thisTI.TwitchNames[username];
+            SQ.call(thisTI.mSQHandle, "deleteTwitchName",username);
+        }
     });
 
     this.twitch_client.connect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
@@ -155,17 +183,22 @@ TwitchInterface.prototype.updateBlacklist = function(_names)
     _names.split(/[ ,;]+/).forEach(function(_exp){thisTI.BlackList.push(new RegExp(_exp,"i"))});
 }
 
+TwitchInterface.prototype.updateSettings = function(_settings)
+{
+    this.Settings = _settings;
+}
+
 TwitchInterface.prototype.onConnection = function (_handle)
 {
 
-    /*console.log = function(){
-        SQ.call(_handle, "logCallback",arguments[0]);
-    }*/
+   
 
     console.log('TWITCH::CONNECT');
     this.mSQHandle = _handle;
     //this.initTwitchClient();
-    
+     /*console.log = function(){
+        SQ.call(this.mSQHandle , "logCallback","text");
+    }*/
 }
 
 registerScreen("TwitchInterface", new TwitchInterface());

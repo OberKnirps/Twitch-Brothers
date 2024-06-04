@@ -37,6 +37,7 @@ this.twitch_interface <- {
         this.m.JSHandle = ::UI.connect("TwitchInterface",this);
         this.m.JSHandle.asyncCall("initTwitchClient", null);
         this.updateBlacklist();
+        this.updateSettings();
     }
 
     function updateChannels(){
@@ -70,6 +71,65 @@ this.twitch_interface <- {
                 ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::TwitchBrothers.Content.Settings.blacklistedNames);
             }
         }
+    }
+
+    function updateSettings()
+    {
+        local settings = 
+        {
+            Commands = 
+            {
+                Name  =
+                {
+                    String  = null,
+                    Enabled = null,
+                    Role    = null
+                },
+                Title = 
+                {
+                    String  = null,
+                    Enabled = null,
+                    Role    = null
+                },
+                Clear =
+                {
+                    String  = null,
+                    Enabled = null,
+                    Role    = null
+                },
+                Block = 
+                {
+                    String  = null,
+                    Enabled = null,
+                    Role    = null
+                }
+            },
+            AutoBan = ::TwitchBrothers.Content.Settings.AutoBan.getValue(),
+            Filter = ::TwitchBrothers.Content.Settings.Filter.getValue()
+        }
+
+        foreach(key, value in settings.Commands){
+            settings.Commands[key].String = ::TwitchBrothers.Content.Settings.Commands[key].String.getValue();
+            settings.Commands[key].Enabled = ::TwitchBrothers.Content.Settings.Commands[key].Enabled.getValue();
+            switch (::TwitchBrothers.Content.Settings.Commands[key].Role.getValue())
+            {
+                case "Broadcaster":
+                    settings.Commands[key].Role = "broadcaster";
+                    break;
+                case "... and Moderators":
+                    settings.Commands[key].Role = "broadcaster|moderator";
+                    break;            
+                case "... and Subscriber":
+                    settings.Commands[key].Role = "broadcaster|moderator|subscriber";
+                    break;
+                case "Everyone":
+                    settings.Commands[key].Role = "";
+                    break;            
+                default:
+                    this.logError("Command couldn't be set because it's no case in switch statment!");   
+            }
+        }
+        ::Const.TwitchInterface.m.JSHandle.asyncCall("updateSettings", settings);
     }
 
     function testCallback(_data){
