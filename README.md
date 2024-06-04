@@ -47,3 +47,12 @@ Might not work with non Latin characters. Should be safe but I can't gurantee th
 - added chat commands: !bbtitle, !bbclear, !bbblock
 - Custom names and titles will discarded if they contain an expression from the blacklist
 - Remove special characters from custom names and titels. Removed characters: `|&;$%@"'<>()+,.:{}[]`
+
+## 0.2.2
+- character names of recruits in settlement get updated when entering a settlement
+- added setting to customize commands and spawn options
+- tooltip of hired brothers show their twitch name (to identify people with custom names)
+- editing player names ingame now doesnt automaticaly the linked twitch names for respawn (unlinking the twitch names will be added when some kind of name reroll mechanic is added)
+- fixed: removing of special characters didn't work
+- fixed: on loading a game characters that were already hired/dead/retired could spawn because they weren't removed from free name list
+- fixed: descriptions weren't always properly build when seting a twitch name
