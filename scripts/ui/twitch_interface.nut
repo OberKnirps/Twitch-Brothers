@@ -195,8 +195,40 @@ this.twitch_interface <- {
     }
 
     function giveBroNewTwitchName(_bro){
-        if(::Const.TwitchInterface.m.TwitchNames.Pool.len()){
-            local elem = ::Const.TwitchInterface.m.TwitchNames.Pool.randValue();
+        local names = [];
+        local total_weight = 0;
+        if(::Const.TwitchInterface.m.TwitchNames.Pool.len() && ::TwitchBrothers.Content.Settings.Spawn.Free.AsRecruit.getValue())
+        {
+            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Pool.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Pool.len()});
+            total_weight += ::Const.TwitchInterface.m.TwitchNames.Pool.len();
+        } 
+
+        if(::Const.TwitchInterface.m.TwitchNames.Hired.len() && ::TwitchBrothers.Content.Settings.Spawn.Hired.AsRecruit.getValue()) 
+        {
+            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Hired.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Hired.len()});
+            total_weight += ::Const.TwitchInterface.m.TwitchNames.Hired.len();
+        }             
+
+        if(::Const.TwitchInterface.m.TwitchNames.Dead.len() && ::TwitchBrothers.Content.Settings.Spawn.Dead.AsRecruit.getValue()) 
+        {
+            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Dead.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Dead.len()});
+            total_weight += ::Const.TwitchInterface.m.TwitchNames.Dead.len();
+        }             
+
+        if(::Const.TwitchInterface.m.TwitchNames.Retired.len() && ::TwitchBrothers.Content.Settings.Spawn.Retired.AsRecruit.getValue()) 
+        {
+            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Retired.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Retired.len()});
+            total_weight += ::Const.TwitchInterface.m.TwitchNames.Retired.len();
+        }             
+
+        if(names.len() > 0){
+            local rand = this.Math.rand(1, total_weight);
+            local elem;
+            for (local i = 0; i < names.len() && rand > 0; ++i)
+            {
+                rand -= names[i].weight;
+                elem = names[i].elem; 
+            }
             if(_bro.m.TwitchID.len() == 0)
                 _bro.m.OriginalName = _bro.m.Name;
             _bro.setName(elem.getName());

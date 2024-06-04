@@ -10,8 +10,8 @@
 				local bros = roster.getAll();
 				//update TwitchIDS
 				foreach (bro in bros){
-					if(bro.m.TwitchID.len() > 0 && bro.m.TwitchID in ::Const.TwitchInterface.m.TwitchNames.Pool.m.Data){
-						local info = ::Const.TwitchInterface.m.TwitchNames.Pool.m.Data[bro.m.TwitchID];
+					if(bro.m.TwitchID.len() > 0 && ::Const.TwitchInterface.lookupName(bro.m.TwitchID) != null){
+						local info = ::Const.TwitchInterface.lookupName(bro.m.TwitchID);
 						bro.setName(info.Name);
 						if(bro.m.OriginalTitle.len() == 0){
 							bro.setTitle(info.Title);

@@ -213,13 +213,13 @@
 
     //Dead
     spawn_settings.addTitle("SpawnDead", "Dead");
-    ::TwitchBrothers.Content.Settings.Spawn.Dead.AsRecruit = spawn_settings.addBooleanSetting("SpawnDeadAsRecruit" , false, "As Recruit", "Not implemented!").lock();
+    ::TwitchBrothers.Content.Settings.Spawn.Dead.AsRecruit = spawn_settings.addBooleanSetting("SpawnDeadAsRecruit" , false, "As Recruit");
     ::TwitchBrothers.Content.Settings.Spawn.Dead.AsEnemy = spawn_settings.addBooleanSetting("SpawnDeadAsEnemy" , false, "As Enemy", "Not implemented!").lock();
     ::TwitchBrothers.Content.Settings.Spawn.Dead.AsDog = spawn_settings.addBooleanSetting("SpawnDeadAsDog" , false, "As Dog", "Not implemented!").lock();
     
     //Retired
     spawn_settings.addTitle("SpawnRetired", "Retired");
-    ::TwitchBrothers.Content.Settings.Spawn.Retired.AsRecruit = spawn_settings.addBooleanSetting("SpawnRetiredAsRecruit" , false, "As Recruit", "Not implemented!").lock();
+    ::TwitchBrothers.Content.Settings.Spawn.Retired.AsRecruit = spawn_settings.addBooleanSetting("SpawnRetiredAsRecruit" , false, "As Recruit");
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsEnemy = spawn_settings.addBooleanSetting("SpawnRetiredAsEnemy" , false, "As Enemy", "Not implemented!").lock();
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsDog = spawn_settings.addBooleanSetting("SpawnRetiredAsDog" , false, "As Dog", "Not implemented!").lock();
 
