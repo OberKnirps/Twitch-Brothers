@@ -5,8 +5,10 @@
 		q.m.OriginalTitle <- "";
 
 		q.restoreOriginalName <- function(){
-			this.m.Name = this.m.OriginalName;
-			this.m.Title = this.m.OriginalTitle;
+			if(this.m.OriginalName.len() > 0)
+				this.setName(this.m.OriginalName);
+			if(this.m.OriginalTitle.len() > 0)
+				this.setTitle(this.m.OriginalTitle);
 			this.m.TwitchID = "";
 		}
 		q.getRosterTooltip = @(__original) function (){
