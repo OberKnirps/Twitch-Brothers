@@ -35,5 +35,6 @@
     ::TwitchBrothers.Content.hook_asset_manager();
     ::TwitchBrothers.Content.hook_world_state();
     ::TwitchBrothers.Content.hook_settlement();
+    ::TwitchBrothers.Content.hook_dogs();
 
 })
