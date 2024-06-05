@@ -3,7 +3,7 @@ this.twitch_interface <- {
     m = {
         JSHandle = null,
         TwitchNames = {
-            Pool     = null,
+            Free     = null,
             Hired    = null,
             Dead     = null,
             Retired  = null
@@ -12,7 +12,7 @@ this.twitch_interface <- {
 
     function create()
     {
-        this.m.TwitchNames.Pool = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
+        this.m.TwitchNames.Free = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
         this.m.TwitchNames.Hired = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
         this.m.TwitchNames.Dead = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
         this.m.TwitchNames.Retired = this.new("scripts/mod_twitch_brothers/twitch_name_pool");
@@ -51,8 +51,8 @@ this.twitch_interface <- {
 
     function updateNameCounter(){
         ::TwitchBrothers.Content.Settings.channelNames.setDescription(
-            "Tracked names: " + (this.m.TwitchNames.Pool.len()+this.m.TwitchNames.Hired.len()+this.m.TwitchNames.Dead.len()+this.m.TwitchNames.Retired.len())
-            + "\nFree: " + this.m.TwitchNames.Pool.len()
+            "Tracked names: " + (this.m.TwitchNames.Free.len()+this.m.TwitchNames.Hired.len()+this.m.TwitchNames.Dead.len()+this.m.TwitchNames.Retired.len())
+            + "\nFree: " + this.m.TwitchNames.Free.len()
             + "\nHired: " + this.m.TwitchNames.Hired.len()
             + "\nDead: " + this.m.TwitchNames.Dead.len()
             + "\nRetired: " + this.m.TwitchNames.Retired.len()
@@ -141,13 +141,13 @@ this.twitch_interface <- {
 
     function addTwitchName(_data){
         if(!this.m.TwitchNames.Hired.updateEntry(_data) && !this.m.TwitchNames.Dead.updateEntry(_data)){
-            !this.m.TwitchNames.Pool.addEntry(_data);
+            !this.m.TwitchNames.Free.addEntry(_data);
         }
         this.updateNameCounter();
     }
 
     function updateTwitchName(_data){
-        this.m.TwitchNames.Pool.updateEntry(_data);
+        this.m.TwitchNames.Free.updateEntry(_data);
         this.m.TwitchNames.Hired.updateEntry(_data);
         this.m.TwitchNames.Dead.updateEntry(_data);
         this.m.TwitchNames.Retired.updateEntry(_data);
@@ -183,8 +183,8 @@ this.twitch_interface <- {
 
     function lookupName(_TwitchID)
     {
-        if(_TwitchID in this.m.TwitchNames.Pool.m.Data)
-            return this.m.TwitchNames.Pool.m.Data[_TwitchID];
+        if(_TwitchID in this.m.TwitchNames.Free.m.Data)
+            return this.m.TwitchNames.Free.m.Data[_TwitchID];
         if(_TwitchID in this.m.TwitchNames.Hired.m.Data)
             return this.m.TwitchNames.Hired.m.Data[_TwitchID];
         if(_TwitchID in this.m.TwitchNames.Dead.m.Data)
@@ -194,47 +194,56 @@ this.twitch_interface <- {
         return null;
     }
 
-    function giveBroNewTwitchName(_bro){
+    function getRandomTwitchName(_category){
         local names = [];
         local total_weight = 0;
-        if(::Const.TwitchInterface.m.TwitchNames.Pool.len() && ::TwitchBrothers.Content.Settings.Spawn.Free.AsRecruit.getValue())
-        {
-            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Pool.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Pool.len()});
-            total_weight += ::Const.TwitchInterface.m.TwitchNames.Pool.len();
-        } 
 
-        if(::Const.TwitchInterface.m.TwitchNames.Hired.len() && ::TwitchBrothers.Content.Settings.Spawn.Hired.AsRecruit.getValue()) 
+        if(!(_category in ::TwitchBrothers.Content.Settings.Spawn.Free))
         {
-            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Hired.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Hired.len()});
-            total_weight += ::Const.TwitchInterface.m.TwitchNames.Hired.len();
-        }             
+            this.logError(_category + " is not a valid spawn category or was misspelled!");
+            throw ::MSU.Exception.InvalidValue(_category);
+        }
 
-        if(::Const.TwitchInterface.m.TwitchNames.Dead.len() && ::TwitchBrothers.Content.Settings.Spawn.Dead.AsRecruit.getValue()) 
+        foreach (key, value in this.m.TwitchNames)
         {
-            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Dead.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Dead.len()});
-            total_weight += ::Const.TwitchInterface.m.TwitchNames.Dead.len();
-        }             
+            if(this.m.TwitchNames[key].len() && ::TwitchBrothers.Content.Settings.Spawn[key][_category].getValue())
+            {
+                names.push({"elem": this.m.TwitchNames[key].randValue(), "weight": this.m.TwitchNames[key].len()});
+                total_weight += this.m.TwitchNames[key].len();
+            }
+        }
 
-        if(::Const.TwitchInterface.m.TwitchNames.Retired.len() && ::TwitchBrothers.Content.Settings.Spawn.Retired.AsRecruit.getValue()) 
+        if(names.len() > 0)
         {
-            names.push({"elem": ::Const.TwitchInterface.m.TwitchNames.Retired.randValue(), "weight": ::Const.TwitchInterface.m.TwitchNames.Retired.len()});
-            total_weight += ::Const.TwitchInterface.m.TwitchNames.Retired.len();
-        }             
-
-        if(names.len() > 0){
             local rand = this.Math.rand(1, total_weight);
             local elem;
+
             for (local i = 0; i < names.len() && rand > 0; ++i)
             {
                 rand -= names[i].weight;
                 elem = names[i].elem; 
             }
+
+            return elem;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    function giveBroNewTwitchName(_bro)
+    {
+        local name = this.getRandomTwitchName("AsRecruit");
+        
+        if(name != null)
+        {
             if(_bro.m.TwitchID.len() == 0)
                 _bro.m.OriginalName = _bro.m.Name;
-            _bro.setName(elem.getName());
-            if(_bro.m.Title.len()==0 && elem.Title)
-                _bro.setTitle(elem.Title);
-            _bro.m.TwitchID = elem.TwitchID;
+            _bro.setName(name.getName());
+            if(_bro.m.Title.len()==0 && name.Title)
+                _bro.setTitle(name.Title);
+            _bro.m.TwitchID = name.TwitchID;
             return true;
         }else{
             return false;
@@ -261,20 +270,20 @@ this.twitch_interface <- {
 
             //update loaded pools with tracked names
             foreach (name in this.m.TwitchNames.Hired.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Dead.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Retired.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
                 }
             } 
             this.updateNameCounter();  
@@ -287,20 +296,20 @@ this.twitch_interface <- {
 
             //update loaded pools with tracked names
             foreach (name in this.m.TwitchNames.Hired.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Dead.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
                 }
             }
             
             foreach (name in this.m.TwitchNames.Retired.m.Data){
-                if(name.TwitchID in this.m.TwitchNames.Pool.m.Data){
-                    this.nameToNamePool(this.m.TwitchNames.Pool.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
                 }
             } 
             this.updateNameCounter();   

@@ -13,7 +13,7 @@
 		local flushSavegameNamePools = function (){
 	        foreach (name in ::Const.TwitchInterface.m.TwitchNames.Hired.m.Data){
 	            if(name.Live){
-	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Pool);
+	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Free);
 	            }else{
 	            	::Const.TwitchInterface.m.TwitchNames.Hired.deleteEntry(name.TwitchID);
 	            }
@@ -21,7 +21,7 @@
 	        
 	        foreach (name in ::Const.TwitchInterface.m.TwitchNames.Dead.m.Data){
 	            if(name.Live){
-	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Pool);
+	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Free);
 	            }else{
 	            	::Const.TwitchInterface.m.TwitchNames.Dead.deleteEntry(name.TwitchID);
 	            }
@@ -29,7 +29,7 @@
 
 	        foreach (name in ::Const.TwitchInterface.m.TwitchNames.Retired.m.Data){
 	            if(name.Live){
-	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Pool);
+	                ::Const.TwitchInterface.nameToNamePool(name,::Const.TwitchInterface.m.TwitchNames.Free);
 	            }else{
 	            	::Const.TwitchInterface.m.TwitchNames.Retired.deleteEntry(name.TwitchID);
 	            }
