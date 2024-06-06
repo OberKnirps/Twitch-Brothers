@@ -232,6 +232,50 @@ this.twitch_interface <- {
         }
     }
 
+    function getRandomTwitchDisplayName(_category, _other_names = null){
+        local names = [];
+        local total_weight = 0;
+
+        if(!(_category in ::TwitchBrothers.Content.Settings.Spawn.Free))
+        {
+            this.logError(_category + " is not a valid spawn category or was misspelled!");
+            throw ::MSU.Exception.InvalidValue(_category);
+        }
+        if(_other_names != null)
+        {
+            names.push({"name": _other_names[this.Math.rand(0, _other_names.len() - 1)], "weight": _other_names.len()});
+            total_weight += _other_names.len();
+            
+        }
+
+        foreach (key, value in this.m.TwitchNames)
+        {
+            if(this.m.TwitchNames[key].len() && ::TwitchBrothers.Content.Settings.Spawn[key][_category].getValue())
+            {
+                names.push({"name": this.m.TwitchNames[key].randValue().DisplayName, "weight": this.m.TwitchNames[key].len()});
+                total_weight += this.m.TwitchNames[key].len();
+            }
+        }
+
+        if(names.len() > 0)
+        {
+            local rand = this.Math.rand(1, total_weight);
+            local name;
+
+            for (local i = 0; i < names.len() && rand > 0; ++i)
+            {
+                rand -= names[i].weight;
+                name = names[i].name; 
+            }
+
+            return name;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     function giveBroNewTwitchName(_bro)
     {
         local name = this.getRandomTwitchName("AsRecruit");

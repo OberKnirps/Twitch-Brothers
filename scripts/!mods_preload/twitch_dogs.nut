@@ -3,10 +3,10 @@
 		q.create = @(__original) function () 
 		{
 			__original();
-			local name = ::Const.TwitchInterface.getRandomTwitchName("AsDog");
+			local name = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsDog", this.Const.Strings.WardogNames);
 			if(name != null)
 			{
-				this.setName(name.Name);
+				this.setName(name + " the Wolf");
 			}
 		}
 	});
@@ -15,10 +15,10 @@
 		q.create = @(__original) function () 
 		{
 			__original();
-			local name = ::Const.TwitchInterface.getRandomTwitchName("AsDog");
+			local name = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsDog", this.Const.Strings.WardogNames);
 			if(name != null)
 			{
-				this.setName(name.Name);
+				this.setName(name + " the Warhound");
 			}
 		}
 	});
@@ -27,10 +27,10 @@
 		q.create = @(__original) function () 
 		{
 			__original();
-			local name = ::Const.TwitchInterface.getRandomTwitchName("AsDog");
+			local name = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsDog", this.Const.Strings.WardogNames);
 			if(name != null)
 			{
-				this.setName(name.Name);
+				this.setName(name + " the Wardog");
 			}
 		}
 	});
