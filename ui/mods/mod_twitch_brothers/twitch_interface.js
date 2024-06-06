@@ -70,7 +70,7 @@ TwitchInterface.prototype.initTwitchClient = function ()
                     return;
                 }
             }
-            thisTI.TwitchNames[userstate["username"]] = {"TwitchID":userstate["username"], "Name": userstate["display-name"], "Title": ""};
+            thisTI.TwitchNames[userstate["username"]] = {"TwitchID":userstate["username"], "DisplayName": userstate["display-name"], "Name": userstate["display-name"], "Title": ""};
             SQ.call(thisTI.mSQHandle, "addTwitchName",thisTI.TwitchNames[userstate["username"]]);
         }
 

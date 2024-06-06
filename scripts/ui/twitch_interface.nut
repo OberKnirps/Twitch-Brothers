@@ -255,14 +255,12 @@ this.twitch_interface <- {
         this.m.TwitchNames.Hired.onSerialize(serializationEmulator);
         this.m.TwitchNames.Dead.onSerialize(serializationEmulator);
         this.m.TwitchNames.Retired.onSerialize(serializationEmulator);
-        //::TwitchBrothers.MSU.Serialization.flagSerialize("Hired", this.m.TwitchNames.Hired);
-        //::TwitchBrothers.MSU.Serialization.flagSerialize("Dead", this.m.TwitchNames.Dead);
-        //::TwitchBrothers.MSU.Serialization.flagSerialize("Retired", this.m.TwitchNames.Retired);
 
     }
 
     function onDeserialize(_in){
-        if(::TwitchBrothers.MSU.Serialization.isSavedVersionAtLeast("0.2.1", _in.getMetaData())){
+        if(::TwitchBrothers.MSU.Serialization.isSavedVersionAtLeast("0.3.0", _in.getMetaData()))
+        {
             local deserializationEmulator = ::TwitchBrothers.MSU.Serialization.getDeserializationEmulator("TwitchInterface");
             this.m.TwitchNames.Hired.onDeserialize(deserializationEmulator);
             this.m.TwitchNames.Dead.onDeserialize(deserializationEmulator);
@@ -287,7 +285,37 @@ this.twitch_interface <- {
                 }
             } 
             this.updateNameCounter();  
-        }else{
+        }
+        else if(::TwitchBrothers.MSU.Serialization.isSavedVersionAtLeast("0.2.1", _in.getMetaData()))
+        {
+            //v0.2.1+v0.2.2 to v0.3.0
+            local deserializationEmulator = ::TwitchBrothers.MSU.Serialization.getDeserializationEmulator("TwitchInterface");
+            this.m.TwitchNames.Hired.onDeserialize022(deserializationEmulator);
+            this.m.TwitchNames.Dead.onDeserialize022(deserializationEmulator);
+            this.m.TwitchNames.Retired.onDeserialize022(deserializationEmulator);
+
+            //update loaded pools with tracked names
+            foreach (name in this.m.TwitchNames.Hired.m.Data){
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Hired);
+                }
+            }
+            
+            foreach (name in this.m.TwitchNames.Dead.m.Data){
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Dead);
+                }
+            }
+            
+            foreach (name in this.m.TwitchNames.Retired.m.Data){
+                if(name.TwitchID in this.m.TwitchNames.Free.m.Data){
+                    this.nameToNamePool(this.m.TwitchNames.Free.m.Data[name.TwitchID],this.m.TwitchNames.Retired);
+                }
+            } 
+            this.updateNameCounter();  
+        }
+        else
+        {
             //v0.2.0 to v0.2.1
             local deserializationEmulator = ::TwitchBrothers.MSU.Serialization.getDeserializationEmulator("TwitchInterface");
             this.m.TwitchNames.Hired.onDeserialize020(deserializationEmulator);

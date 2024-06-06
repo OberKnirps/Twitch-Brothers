@@ -1,5 +1,6 @@
 this.twitch_name_object <- {
 	TwitchID = "",
+	DisplayName = "",
 	Name = "",
 	Title = "",
 	ParentTable = null,
@@ -11,6 +12,7 @@ this.twitch_name_object <- {
 
 	function initWithData(_data, _live = true){
 		this.TwitchID = _data.TwitchID;
+		this.DisplayName = _data.DisplayName;
 		this.Name = _data.Name;
 		this.Title = _data.Title;
 		this.Live = _live;
@@ -28,28 +30,27 @@ this.twitch_name_object <- {
 
 	function onSerialize(_out)
 	{
-        /*this.logDebug("Call serialize name object");
-        this.logDebug("TID: " + this.TwitchID);
-        this.logDebug("Name: " + this.Name);*/
-		//serialize this.TwitchID
-		//::MSU.Utils.serialize(this.TwitchID, _out);
-		_out.writeU8(::MSU.Utils.DataType.String);
 		_out.writeString(this.TwitchID);
-		//serialize this.Name
-		//::MSU.Utils.serialize(this.Name, _out);
-		_out.writeU8(::MSU.Utils.DataType.String);
+		_out.writeString(this.DisplayName);
 		_out.writeString(this.Name);
-
-		//serialize this.Title
-		_out.writeU8(::MSU.Utils.DataType.String);
 		_out.writeString(this.Title);
 	}
 
 	function onDeserialize(_in)
 	{
+		this.TwitchID = _in.readString();
+		this.DisplayName = _in.readString();
+		this.Name = _in.readString();	
+		this.Title = _in.readString();	
+		this.Live = false;
+	}
+
+	function onDeserialize022(_in)
+	{
 		//deserialize this.TwitchID
 		_in.readU8();
 		this.TwitchID =_in.readString();
+		this.DisplayName = this.TwitchID;
 		//deserialize this.Namme
 		_in.readU8();
 		this.Name =_in.readString();	

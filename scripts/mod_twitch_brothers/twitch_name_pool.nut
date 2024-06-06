@@ -32,10 +32,6 @@ this.twitch_name_pool <-{
 
 
 	function onSerialize(_out){
-		//serialize this.m.Data.len()
-		//::MSU.Utils.serialize(this.m.Data.len(), _out);
-		_out.writeU8(::MSU.Utils.DataType.Integer);
-		_out.writeBool(false);
 		_out.writeI32(this.m.Data.len());
 
 		foreach (entry in this.m.Data){
@@ -51,6 +47,24 @@ this.twitch_name_pool <-{
 			this.m.Data.clear();
 		}
 
+		local len = _in.readI32();
+		
+		for (local i = 0; i < len; i++){
+	        local name_object = this.new("scripts/mod_twitch_brothers/twitch_name_object");
+	        name_object.ParentTable = this;
+	        name_object.onDeserialize(_in);
+	        this.m.Data[name_object.TwitchID] <- name_object;
+
+		}
+	}
+
+	function onDeserialize022(_in)
+	{
+		if (this.m.Data.len()){
+			this.logDebug("This name pool shoudn't contain any entries! Clearing it now to avoid contamination.");
+			this.m.Data.clear();
+		}
+
 		//deserialize this.m.Data.len()
 		//local len = ::MSU.Utils.deserialize(_in);
 		_in.readU8();
@@ -60,7 +74,7 @@ this.twitch_name_pool <-{
 		for (local i = 0; i < len; i++){
 	        local name_object = this.new("scripts/mod_twitch_brothers/twitch_name_object");
 	        name_object.ParentTable = this;
-	        name_object.onDeserialize(_in);
+	        name_object.onDeserialize022(_in);
 	        this.m.Data[name_object.TwitchID] <- name_object;
 
 		}
