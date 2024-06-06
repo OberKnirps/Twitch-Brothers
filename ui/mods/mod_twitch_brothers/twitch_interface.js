@@ -3,17 +3,20 @@
 var TwitchInterface = function()
 {
     this.mSQHandle = null;
-    this.twitch_client = null;
+    this.TwitchClient = null;
     this.TwitchNames = {};
     this.IgnoreIDs =[];
     this.BlackList =[];
     this.Settings = {};
-    this.options = {
-      options: {
+    this.Options = 
+    {
+      options: 
+      {
         debug: false,
         skipUpdatingEmotesets: true
       },
-      connection: {
+      connection: 
+      {
         reconnect: true,
         secure: true
       },
@@ -30,8 +33,9 @@ TwitchInterface.prototype.create = function(_parentDiv)
 TwitchInterface.prototype.destroy = function ()
 {
     console.log('TWITCH::DESTROY');
-    if(this.twitch_client !== undefined){
-        this.twitch_client.disconnect();
+    if(this.TwitchClient !== undefined)
+    {
+        this.TwitchClient.disconnect();
     }
 
     //this.destroyDIV();
@@ -58,14 +62,19 @@ TwitchInterface.prototype.initTwitchClient = function ()
 {
     SQ.call(this.mSQHandle, "updateChannels", null);
     var thisTI = this;
-    if(this.twitch_client != null){
-        this.twitch_client.disconnect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
+    if(this.TwitchClient != null)
+    {
+        this.TwitchClient.disconnect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
     }
-    this.twitch_client = new client( this.options );
-    this.twitch_client.on( 'message', function( channel, userstate, message, self ) {
-        if(!thisTI.TwitchNames.hasOwnProperty(userstate["username"]) && !thisTI.IgnoreIDs.includes(userstate["username"])){
-            for(var i = 0; i < thisTI.BlackList.length; i++){ 
-                if(userstate["username"].includes(thisTI.BlackList[i])) {
+    this.TwitchClient = new client( this.Options );
+    this.TwitchClient.on( 'message', function( channel, userstate, message, self ) 
+    {
+        if(!thisTI.TwitchNames.hasOwnProperty(userstate["username"]) && !thisTI.IgnoreIDs.includes(userstate["username"]))
+        {
+            for(var i = 0; i < thisTI.BlackList.length; i++)
+            { 
+                if(userstate["username"].includes(thisTI.BlackList[i])) 
+                {
                     thisTI.IgnoreIDs.push(userstate["username"]);
                     return;
                 }
@@ -85,8 +94,10 @@ TwitchInterface.prototype.initTwitchClient = function ()
 
         //commands
         var commandList = message.split(/ (?=!)/g);
-        commandList.forEach( function(_str){
-            if(typeof _str != "string"){
+        commandList.forEach( function(_str)
+        {
+            if(typeof _str != "string")
+            {
                 return;
             }
 
@@ -99,8 +110,10 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 commandBody = commandBody.replace(characterFilter, "");
 
                 //check custom name for blacklist
-                for(var i = 0; i < thisTI.BlackList.length; i++){ 
-                    if(commandBody.includes(thisTI.BlackList[i])) {
+                for(var i = 0; i < thisTI.BlackList.length; i++)
+                { 
+                    if(commandBody.includes(thisTI.BlackList[i])) 
+                    {
                         return;
                     }
                 }
@@ -153,7 +166,8 @@ TwitchInterface.prototype.initTwitchClient = function ()
         
     });
 
-    this.twitch_client.on( 'ban', function( channel, username, reason ) {
+    this.TwitchClient.on( 'ban', function( channel, username, reason ) 
+    {
         if(thisTI.Settings.AutoBan)
         {
             thisTI.IgnoreIDs.push(username);
@@ -162,7 +176,7 @@ TwitchInterface.prototype.initTwitchClient = function ()
         }
     });
 
-    this.twitch_client.connect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
+    this.TwitchClient.connect().then(function(res){console.log(res[0]+"|"+res[1])}, console.log);
 }
 
 TwitchInterface.prototype.transferNames = function (_TwitchNames)
@@ -173,7 +187,7 @@ TwitchInterface.prototype.transferNames = function (_TwitchNames)
 
 TwitchInterface.prototype.updateChannels = function (_channels)
 {
-    this.options.channels = _channels.split(/[ ,;]+/);
+    this.Options.channels = _channels.split(/[ ,;]+/);
 }
 
 TwitchInterface.prototype.updateBlacklist = function(_names)

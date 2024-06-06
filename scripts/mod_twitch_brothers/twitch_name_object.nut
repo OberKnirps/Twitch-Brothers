@@ -1,4 +1,5 @@
-this.twitch_name_object <- {
+this.twitch_name_object <- 
+{
 	TwitchID = "",
 	DisplayName = "",
 	Name = "",
@@ -6,11 +7,13 @@ this.twitch_name_object <- {
 	ParentTable = null,
 	Live = false,
 	
-	function create(){
+	function create()
+	{
 
 	}
 
-	function initWithData(_data, _live = true){
+	function initWithData(_data, _live = true)
+	{
 		this.TwitchID = _data.TwitchID;
 		this.DisplayName = _data.DisplayName;
 		this.Name = _data.Name;
@@ -21,8 +24,10 @@ this.twitch_name_object <- {
 
 	}
 
-	function getName(){
-		if(this.Name.len()){
+	function getName()
+	{
+		if(this.Name.len())
+		{
 			return this.Name;
 		}
 		return this.TwitchID;

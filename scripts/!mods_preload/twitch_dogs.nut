@@ -1,5 +1,7 @@
-::TwitchBrothers.Content.hook_dogs <- function(){
-	::TwitchBrothers.Mod.hook("scripts/items/accessory/wolf_item", function ( q ) {
+::TwitchBrothers.Content.hook_dogs <- function()
+{
+	::TwitchBrothers.Mod.hook("scripts/items/accessory/wolf_item", function ( q ) 
+	{
 		q.create = @(__original) function () 
 		{
 			__original();
@@ -11,7 +13,8 @@
 		}
 	});
 
-	::TwitchBrothers.Mod.hook("scripts/items/accessory/warhound_item", function ( q ) {
+	::TwitchBrothers.Mod.hook("scripts/items/accessory/warhound_item", function ( q ) 
+	{
 		q.create = @(__original) function () 
 		{
 			__original();
@@ -23,7 +26,8 @@
 		}
 	});
 
-	::TwitchBrothers.Mod.hook("scripts/items/accessory/wardog_item", function ( q ) {
+	::TwitchBrothers.Mod.hook("scripts/items/accessory/wardog_item", function ( q ) 
+	{
 		q.create = @(__original) function () 
 		{
 			__original();
