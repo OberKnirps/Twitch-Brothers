@@ -241,7 +241,7 @@ this.twitch_interface <-
         }
     }
 
-    function getRandomTwitchDisplayName(_category, _otherNames = null)
+    function getRandomTwitchDisplayName(_category, _otherNames = null, _phaseOutThreshold = 0)
     {
         local names = [];
         local totalWeight = 0;
@@ -251,11 +251,7 @@ this.twitch_interface <-
             this.logError(_category + " is not a valid spawn category or was misspelled!");
             throw ::MSU.Exception.InvalidValue(_category);
         }
-        if(_otherNames != null)
-        {
-            names.push({"name": _otherNames[this.Math.rand(0, _otherNames.len() - 1)], "weight": _otherNames.len()});
-            totalWeight += _otherNames.len();
-        }
+
 
         foreach (key, value in this.m.TwitchNames)
         {
@@ -264,6 +260,24 @@ this.twitch_interface <-
                 names.push({"name": this.m.TwitchNames[key].randValue().DisplayName, "weight": this.m.TwitchNames[key].len()});
                 totalWeight += this.m.TwitchNames[key].len();
             }
+        }
+
+        if(_otherNames != null)
+        {   
+            if(_phaseOutThreshold > 0)
+            {
+                if(_phaseOutThreshold - totalWeight > 0)
+                {
+                    names.push({"name": _otherNames[this.Math.rand(0, _otherNames.len() - 1)], "weight": _phaseOutThreshold - totalWeight});
+                    totalWeight += _phaseOutThreshold - totalWeight;
+                }
+            }
+            else
+            {
+                names.push({"name": _otherNames[this.Math.rand(0, _otherNames.len() - 1)], "weight": _otherNames.len()});
+                totalWeight += _otherNames.len();
+            }
+
         }
 
         if(names.len() > 0)
