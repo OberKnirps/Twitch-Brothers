@@ -37,4 +37,6 @@
     ::TwitchBrothers.Content.hook_settlement();
     ::TwitchBrothers.Content.hook_dogs();
     ::TwitchBrothers.Content.hook_items();
+    ::TwitchBrothers.Content.override_world_entity_common();
+    ::TwitchBrothers.Content.hook_actor();
 })
