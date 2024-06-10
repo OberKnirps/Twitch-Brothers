@@ -5,11 +5,14 @@
 		q.create = @(__original) function ()
 		{
 			__original();
-			if(this.m.Type == -1) return;
+
 			local name;
 			local title;
-			local twitchName = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsEnemy", [""], 10);
 			local troopInfo;
+			local twitchName = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsEnemy", [""], 10);
+
+			if(this.m.Type == -1 || twitchName == "") return;
+
 			foreach (troop in this.Const.World.Spawn.Troops)
 			{
 				if(troop.ID == this.m.Type)
@@ -28,7 +31,7 @@
 				title = " the " + this.Const.Strings.EntityName[this.m.Type];
 			}
 
-			if("NameList" in troopInfo && troopInfo.NameList != null && title != "" && twitchName != null)
+			if("NameList" in troopInfo && troopInfo.NameList != null && title != "")
 			{
 				name = troopInfo.NameList[this.Math.rand(0, troopInfo.NameList.len() - 1)];
 				if(name.find("name%") != null)
