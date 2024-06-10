@@ -116,95 +116,58 @@
     });            
 
     //Chat command settings
-    //Name command
-    commandSettings.addTitle("NameCommand", "Name-Command");
-
-    ::TwitchBrothers.Content.Settings.Commands.Name.String = commandSettings.addStringSetting("NameCommandString", "bbname", "Command name");
-    ::TwitchBrothers.Content.Settings.Commands.Name.String.addAfterChangeCallback(function ( _oldValue )
+    local defaultValues = 
     {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
+        Name  =
+        {
+            Name    = "Name",
+            String  = "bbname",
+            Role    = "Everyone",
+            Enabled = true
+        },
+        Title = 
+        {
+            Name    = "Title",
+            String  = "bbtitle",
+            Role    = "Everyone",
+            Enabled = true
+        },
+        Clear =
+        {
+            Name    = "Clear",
+            String  = "bbclear",
+            Role    = "... and Moderators",
+            Enabled = true
+        },
+        Block = 
+        {
+            Name    = "Block",
+            String  = "bbblock",
+            Role    = "... and Moderators",
+            Enabled = true
+        }
+    }
 
-    ::TwitchBrothers.Content.Settings.Commands.Name.Role = commandSettings.addEnumSetting("NameCommandRole" , "Everyone", ["Broadcaster", "... and Moderators", "... and Subscriber", "Everyone"], "Allowed roles");
-    ::TwitchBrothers.Content.Settings.Commands.Name.Role.addAfterChangeCallback(function ( _oldValue )
+    foreach (command in defaultValues)
     {
-        ::Const.TwitchInterface.updateSettings();
-    });
+        commandSettings.addTitle(command.Name + "Command", command.Name + "-Command");
+        commandSettings.addDivider("DividerCommand" + command.Name);
 
-    ::TwitchBrothers.Content.Settings.Commands.Name.Enabled = commandSettings.addBooleanSetting("NameCommandEnabled" , true, "Enable command");
-    ::TwitchBrothers.Content.Settings.Commands.Name.Enabled.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].String = commandSettings.addStringSetting(command.Name + "CommandString", command.String, "Command name");
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].String.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchInterface.updateSettings();}); 
 
-    //Title command
-    commandSettings.addTitle("TitleCommand", "Title-Command");
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].Role = commandSettings.addEnumSetting(command.Name + "CommandRole" , command.Role, ["Broadcaster", "... and Moderators", "... and Subscriber", "Everyone"], "Allowed roles", "Broadcaster - Only broadcaster of the tracked channels can use that commmand\n\n ... and Moderators - Only broadcaster and moderators can use that commmand\n\n ... and Subscriber - Only broadcaster, moderators and subscriber can use that command\n\n Everyone - Everyone can use that command");
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].Role.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchInterface.updateSettings();}); 
 
-    ::TwitchBrothers.Content.Settings.Commands.Title.String = commandSettings.addStringSetting("TitleCommandString", "bbtitle", "Command name");
-    ::TwitchBrothers.Content.Settings.Commands.Title.String.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
-
-    ::TwitchBrothers.Content.Settings.Commands.Title.Role = commandSettings.addEnumSetting("TitleCommandRole" , "Everyone", ["Broadcaster", "... and Moderators", "... and Subscriber", "Everyone"], "Allowed roles");
-    ::TwitchBrothers.Content.Settings.Commands.Title.Role.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    });
-
-    ::TwitchBrothers.Content.Settings.Commands.Title.Enabled = commandSettings.addBooleanSetting("TitleCommandEnabled" , true, "Enable command");
-    ::TwitchBrothers.Content.Settings.Commands.Title.Enabled.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
-
-    //Clear command
-    commandSettings.addTitle("ClearCommand", "Clear-Command");
-
-    ::TwitchBrothers.Content.Settings.Commands.Clear.String = commandSettings.addStringSetting("ClearCommandString", "bbclear", "Command name");
-    ::TwitchBrothers.Content.Settings.Commands.Clear.String.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
-
-    ::TwitchBrothers.Content.Settings.Commands.Clear.Role = commandSettings.addEnumSetting("ClearCommandRole" , "... and Moderators", ["Broadcaster", "... and Moderators", "... and Subscriber", "Everyone"], "Allowed roles");
-    ::TwitchBrothers.Content.Settings.Commands.Clear.Role.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    });
-
-    ::TwitchBrothers.Content.Settings.Commands.Clear.Enabled = commandSettings.addBooleanSetting("ClearCommandEnabled" , true, "Enable command");
-    ::TwitchBrothers.Content.Settings.Commands.Clear.Enabled.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
-
-    //Block command
-    commandSettings.addTitle("BlockCommand", "Block-Command");
-
-    ::TwitchBrothers.Content.Settings.Commands.Block.String = commandSettings.addStringSetting("BlockCommandString", "bbblock", "Command name");
-    ::TwitchBrothers.Content.Settings.Commands.Block.String.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
-
-    ::TwitchBrothers.Content.Settings.Commands.Block.Role = commandSettings.addEnumSetting("BlockCommandRole" , "... and Moderators", ["Broadcaster", "... and Moderators", "... and Subscriber", "Everyone"], "Allowed roles");
-    ::TwitchBrothers.Content.Settings.Commands.Block.Role.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    });
-
-    ::TwitchBrothers.Content.Settings.Commands.Block.Enabled = commandSettings.addBooleanSetting("BlockCommandEnabled" , true, "Enable command");
-    ::TwitchBrothers.Content.Settings.Commands.Block.Enabled.addAfterChangeCallback(function ( _oldValue )
-    {
-        ::Const.TwitchInterface.updateSettings();
-    }); 
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].Enabled = commandSettings.addBooleanSetting(command.Name + "CommandEnabled" , command.Enabled, "Enable command");
+        ::TwitchBrothers.Content.Settings.Commands[command.Name].Enabled.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchInterface.updateSettings();}); 
+    }
 
     //Spawn settings
     //Free
     spawnSettings.addTitle("SpawnFree", "Free");
     ::TwitchBrothers.Content.Settings.Spawn.Free.AsRecruit = spawnSettings.addBooleanSetting("SpawnFreeAsRecruit" , true, "As Recruit");
-    ::TwitchBrothers.Content.Settings.Spawn.Free.AsEnemy = spawnSettings.addBooleanSetting("SpawnFreeAsEnemy" , true, "As Enemy", "Not implemented!");
+    ::TwitchBrothers.Content.Settings.Spawn.Free.AsEnemy = spawnSettings.addBooleanSetting("SpawnFreeAsEnemy" , true, "As Enemy");
     ::TwitchBrothers.Content.Settings.Spawn.Free.AsDog = spawnSettings.addBooleanSetting("SpawnFreeAsDog" , true, "As Dog");
     ::TwitchBrothers.Content.Settings.Spawn.Free.AsItem = spawnSettings.addBooleanSetting("SpawnFreeAsItem" , true, "As Item");
 
@@ -213,7 +176,7 @@
     //Hired
     spawnSettings.addTitle("SpawnHired", "Hired");
     ::TwitchBrothers.Content.Settings.Spawn.Hired.AsRecruit = spawnSettings.addBooleanSetting("SpawnHiredAsRecruit" , false, "As Recruit", "Disabled for now to prevent duplication.");
-    ::TwitchBrothers.Content.Settings.Spawn.Hired.AsEnemy = spawnSettings.addBooleanSetting("SpawnHiredAsEnemy" , false, "As Enemy", "Not implemented!");
+    ::TwitchBrothers.Content.Settings.Spawn.Hired.AsEnemy = spawnSettings.addBooleanSetting("SpawnHiredAsEnemy" , false, "As Enemy");
     ::TwitchBrothers.Content.Settings.Spawn.Hired.AsDog = spawnSettings.addBooleanSetting("SpawnHiredAsDog" , false, "As Dog");
     ::TwitchBrothers.Content.Settings.Spawn.Hired.AsItem = spawnSettings.addBooleanSetting("SpawnHiredAsItem" , false, "As Item");
 
@@ -222,7 +185,7 @@
     //Dead
     spawnSettings.addTitle("SpawnDead", "Dead");
     ::TwitchBrothers.Content.Settings.Spawn.Dead.AsRecruit = spawnSettings.addBooleanSetting("SpawnDeadAsRecruit" , false, "As Recruit");
-    ::TwitchBrothers.Content.Settings.Spawn.Dead.AsEnemy = spawnSettings.addBooleanSetting("SpawnDeadAsEnemy" , true, "As Enemy", "Not implemented!");
+    ::TwitchBrothers.Content.Settings.Spawn.Dead.AsEnemy = spawnSettings.addBooleanSetting("SpawnDeadAsEnemy" , true, "As Enemy");
     ::TwitchBrothers.Content.Settings.Spawn.Dead.AsDog = spawnSettings.addBooleanSetting("SpawnDeadAsDog" , true, "As Dog");
     ::TwitchBrothers.Content.Settings.Spawn.Dead.AsItem = spawnSettings.addBooleanSetting("SpawnDeadAsItem" , true, "As Item");
     
@@ -230,7 +193,7 @@
     //Retired
     spawnSettings.addTitle("SpawnRetired", "Retired");
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsRecruit = spawnSettings.addBooleanSetting("SpawnRetiredAsRecruit" , false, "As Recruit");
-    ::TwitchBrothers.Content.Settings.Spawn.Retired.AsEnemy = spawnSettings.addBooleanSetting("SpawnRetiredAsEnemy" , true, "As Enemy", "Not implemented!");
+    ::TwitchBrothers.Content.Settings.Spawn.Retired.AsEnemy = spawnSettings.addBooleanSetting("SpawnRetiredAsEnemy" , true, "As Enemy");
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsDog = spawnSettings.addBooleanSetting("SpawnRetiredAsDog" , true, "As Dog");
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsItem = spawnSettings.addBooleanSetting("SpawnRetiredAsItem" , true, "As Item");
 
