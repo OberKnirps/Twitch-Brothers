@@ -1,6 +1,15 @@
 # **DISCLAIMER**
 Might not work with non-Latin characters. Should be safe, but I can't guarantee that.
 
+# Compatibility
+## Savegames:
+- adding this mod to an existing savegame should be fine (tested it once, and it's intended to not break saves)
+- removing the mod will make that savegame unloadable
+  - if you don't want to use the mod anymore, but don't want to break the savegame, making the "channel" field blank should behave like it's been removed
+## Other mods:
+- compatible with legends
+- should be compatible with almost anyother mod
+
 # Features:
 - Requires only channel name, no OAuth Token required
 Multiple channels can be used at the same time
