@@ -8,18 +8,23 @@
 
 			local name;
 			local title;
-			local troopInfo;
+			local troopInfo = null;
 			local twitchName = ::Const.TwitchInterface.getRandomTwitchDisplayName("AsEnemy", [""], 10);
 
 			if(this.m.Type == -1 || twitchName == "") return;
 
-			foreach (troop in this.Const.World.Spawn.Troops)
+			foreach (key,troop in this.Const.World.Spawn.Troops)
 			{
 				if(troop.ID == this.m.Type)
 				{
-					troopInfo = troop;
+					troopInfo = troop;			
 					break;
 				}
+			}
+
+			if(troopInfo == null){
+				this.logError("There is no troop for type: " + this.m.Type + "; Unit name: " + this.getName());
+				return;	
 			}
 
 			if("TitleList" in troopInfo && troopInfo.TitleList != null)
