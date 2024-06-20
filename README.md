@@ -73,3 +73,7 @@ Multiple channels can be used at the same time
 - named items can spawn with chat name
 - some elite enemies can spawn with chat name
 - fixed: couldn't enter settlement because a setting couldn't be properly accessed
+
+## 0.3.1
+- fixed: named items(with character names) were sometimes not properly named
+- fixed: some enemies could produce errors because troop/type weren't properly set
