@@ -1,6 +1,6 @@
 ::TwitchBrothers <- {
     ID = "mod_twitch_brothers",
-    Version = "0.3.0",
+    Version = "0.3.1",
     Name = "Twitch Brothers",
     Content = {}
 };
@@ -12,7 +12,7 @@
     ::TwitchBrothers.MSU <- ::MSU.Class.Mod(::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
 
     ::TwitchBrothers.MSU.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/OberKnirps/Twitch-Brothers");
-    //::TwitchBrothers.MSU.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/569");
+    ::TwitchBrothers.MSU.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/727");
     ::TwitchBrothers.MSU.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/promise.js");
