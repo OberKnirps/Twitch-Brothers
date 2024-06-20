@@ -23,20 +23,14 @@
 					];
 				switch (_list)
 				{
-					case this.Const.Strings.BanditLeaderNames:
-						return this.buildTextFromTemplate(_list[this.Math.rand(0, _list.len() - 1)], vars);
-						break;
-
 					case this.Const.Strings.KnightNames:
 						return "Sir " + vars[0][1];
-						break;
 
 					case this.Const.Strings.NomadChampionStandalone:
 						return vars[1][1] + " " + this.Const.Strings.NomadChampionTitles[this.Math.rand(0, this.Const.Strings.NomadChampionTitles.len() - 1)];
-						break;
 
 					default:
-						return __original(_list);
+						return this.buildTextFromTemplate(_list[this.Math.rand(0, _list.len() - 1)], vars);
 				}
 			}
 		}
