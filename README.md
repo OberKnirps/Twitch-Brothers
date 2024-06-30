@@ -84,3 +84,9 @@ Multiple channels can be used at the same time
   - ban TwitchIDs in game
   - reroll TwitchIDs
 - minor bugfixes and improvements  
+
+## 0.4.1
+- fixed typos
+- added tooltips
+  - TwitchID tooltip now shows partial matches of tracked IDs
+- removed junk files from release
