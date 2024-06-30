@@ -219,6 +219,40 @@ this.twitch_interface <-
         return null;
     }
 
+    function lookupNamesWithSubstring(_twitchIDPart)
+    {
+        local list = [];
+        foreach(twitchID, val in this.m.TwitchNames.Free.m.Data)
+        {
+            if(twitchID.find(_twitchIDPart) != null)
+                list.push(this.m.TwitchNames.Free.m.Data[twitchID]);
+        }
+        foreach(twitchID, val in this.m.TwitchNames.Hired.m.Data)
+        {
+            if(twitchID.find(_twitchIDPart) != null)
+                list.push(this.m.TwitchNames.Hired.m.Data[twitchID]);
+        }
+        foreach(twitchID, val in this.m.TwitchNames.Dead.m.Data)
+        {
+            if(twitchID.find(_twitchIDPart) != null)
+                list.push(this.m.TwitchNames.Dead.m.Data[twitchID]);
+        }
+        foreach(twitchID, val in this.m.TwitchNames.Retired.m.Data)
+        {
+            if(twitchID.find(_twitchIDPart) != null)
+                list.push(this.m.TwitchNames.Retired.m.Data[twitchID]);
+        }
+
+        if(list.len())
+        {
+            return list;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     function getRandomTwitchName(_category)
     {
         local names = [];
