@@ -80,7 +80,7 @@ Multiple channels can be used at the same time
 
 ## 0.4.0
 - implemented new character naming screen
-  - update custom twitch names ingame
-  - ban twitchIDs ingame
-  - rerolle twitchIDs
+  - update custom Twitch names in game
+  - ban TwitchIDs in game
+  - reroll TwitchIDs
 - minor bugfixes and improvements  
