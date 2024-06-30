@@ -77,3 +77,10 @@ Multiple channels can be used at the same time
 ## 0.3.1
 - fixed: named items(with character names) were sometimes not properly named
 - fixed: some enemies could produce errors because troop/type weren't properly set
+
+## 0.4.0
+- implemented new character naming screen
+ - update custom twitch names ingame
+ -  ban twitchIDs ingame
+ -  rerolle twitchIDs
+- minor bugfixes and improvements  
