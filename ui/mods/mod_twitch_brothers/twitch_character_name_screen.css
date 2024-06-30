@@ -1,0 +1,44 @@
+/* Override Name & Title Dialog Container */
+.character-screen .ui-control.popup-dialog.change-name-and-title-popup
+{
+    width: 50rem;
+    height: 36.0rem;
+
+    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+    background-size: 50rem 36.0rem;
+    background-repeat: no-repeat;
+}
+
+.character-screen .ui-control.popup-dialog .change-name-and-title-container .row .button
+{
+    width: 4.5rem;
+    height: 4.1rem;
+    margin-top: 1.1rem;
+    position: relative;
+    float: left;
+}
+
+.character-screen .ui-control.popup-dialog .change-name-and-title-container .row-small
+{
+    width: 100%;
+    height: 4.3rem;
+    position: relative;
+    float: left;
+}
+
+.character-screen .ui-control.popup-dialog .change-name-and-title-container .row-small .spacer
+{
+    width: 8.5rem;
+    height: 5.9rem;
+    position: relative;
+    float: left;
+}
+
+.character-screen .ui-control.popup-dialog .change-name-and-title-container .row-small .button-text
+{
+    width: 17.5rem;
+    margin-left: -1rem;
+    position: relative;
+    float: left;
+    line-height: 3.0rem;
+}
