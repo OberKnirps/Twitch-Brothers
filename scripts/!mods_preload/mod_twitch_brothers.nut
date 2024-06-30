@@ -1,13 +1,13 @@
 ::TwitchBrothers <- {
     ID = "mod_twitch_brothers",
-    Version = "0.3.1",
+    Version = "0.4.0",
     Name = "Twitch Brothers",
     Content = {}
 };
 
 ::TwitchBrothers.Mod <- ::Hooks.register(::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
 ::TwitchBrothers.Mod.require("mod_msu(>=1.2.7)");
-::TwitchBrothers.Mod.queue(">mod_msu", function()
+::TwitchBrothers.Mod.queue(">mod_msu", ">mod_sellswords", function()
 {
     ::TwitchBrothers.MSU <- ::MSU.Class.Mod(::TwitchBrothers.ID, ::TwitchBrothers.Version, ::TwitchBrothers.Name);
 
@@ -24,10 +24,15 @@
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/tmi_es5/lib/parser.js");
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/tmi_es5/lib/timer.js");
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/tmi_es5/lib/client.js");
-    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_interface.js");
-   
+
+    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_interface.js");  
     ::Const.TwitchInterface <- this.new("scripts/ui/twitch_interface");
     ::MSU.UI.registerConnection(::Const.TwitchInterface);
+
+    ::Hooks.registerCSS("ui/mods/mod_twitch_brothers/twitch_character_name_screen.css");
+    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_character_name_screen.js");
+    ::Const.TwitchCharacterNameScreen <- this.new("scripts/ui/twitch_character_name_screen");
+    ::MSU.UI.registerConnection(::Const.TwitchCharacterNameScreen);
 
     ::TwitchBrothers.Content.addSettings();
     ::TwitchBrothers.Content.hook_player();
@@ -39,4 +44,5 @@
     ::TwitchBrothers.Content.hook_items();
     ::TwitchBrothers.Content.override_world_entity_common();
     ::TwitchBrothers.Content.hook_actor();
+    ::TwitchBrothers.Content.add_tooltips();
 })

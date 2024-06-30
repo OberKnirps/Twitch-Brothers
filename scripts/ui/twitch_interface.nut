@@ -77,8 +77,25 @@ this.twitch_interface <-
                     ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", "Nightbot, Streamlabs, Moobot, StreamElements, Wizebot, PhantomBot, Stay_Hydrated_Bot, TidyLabs"); 
                 }
             }else{
-                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::TwitchBrothers.Content.Settings.blacklistedNames);
+                ::Const.TwitchInterface.m.JSHandle.asyncCall("updateBlacklist", ::TwitchBrothers.Content.Settings.blacklistedNames.getValue());
             }
+        }
+    }
+
+    function banTwitchID(_twitchID)
+    {
+        if(_twitchID.len())
+        {
+            if(::TwitchBrothers.Content.Settings.blacklistedNames.getValue().len())
+            {
+                ::TwitchBrothers.Content.Settings.blacklistedNames.set(::TwitchBrothers.Content.Settings.blacklistedNames.getValue() + "," + _twitchID);
+            }
+            else
+            {
+                ::TwitchBrothers.Content.Settings.blacklistedNames.set(_twitchID);
+            }
+            this.updateBlacklist();
+            this.deleteTwitchName(_twitchID);
         }
     }
 

@@ -39,7 +39,7 @@ this.twitch_name_pool <-{
 
 	function onSerialize(_out)
 	{
-		_out.writeI32(this.m.Data.len());
+		::MSU.Serialization.serialize(this.m.Data.len(), _out);
 
 		foreach (entry in this.m.Data)
 		{
@@ -55,7 +55,7 @@ this.twitch_name_pool <-{
 			this.m.Data.clear();
 		}
 
-		local len = _in.readI32();
+		local len = ::MSU.Serialization.deserialize(_in);
 		
 		for (local i = 0; i < len; i++)
 		{

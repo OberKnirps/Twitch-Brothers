@@ -159,7 +159,7 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 {
                     thisTI.IgnoreIDs.push(commandBody);
                     delete thisTI.TwitchNames[commandBody];
-                    SQ.call(thisTI.mSQHandle, "deleteTwitchName",commandBody);  
+                    SQ.call(thisTI.mSQHandle, "banTwitchID",commandBody);  
                 }
             }
         })
@@ -172,7 +172,7 @@ TwitchInterface.prototype.initTwitchClient = function ()
         {
             thisTI.IgnoreIDs.push(username);
             delete thisTI.TwitchNames[username];
-            SQ.call(thisTI.mSQHandle, "deleteTwitchName",username);
+            SQ.call(thisTI.mSQHandle, "banTwitchID",username);
         }
     });
 
@@ -193,7 +193,21 @@ TwitchInterface.prototype.updateChannels = function (_channels)
 TwitchInterface.prototype.updateBlacklist = function(_names)
 {
     var thisTI = this;
+
+    for(var i = 0; i < thisTI.BlackList.length; i++)
+    {
+        for(var name in thisTI.TwitchNames)
+        {
+            if(name.includes(thisTI.BlackList[i])) 
+            {
+                delete thisTI.TwitchNames[name];
+                return;
+            }
+        } 
+    }
+
     thisTI.BlackList = [];
+    thisTI.IgnoreIDs = [];
     _names.split(/[ ,;]+/).forEach(function(_exp){thisTI.BlackList.push(new RegExp(_exp,"i"))});
 }
 

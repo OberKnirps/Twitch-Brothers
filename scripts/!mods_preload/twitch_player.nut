@@ -6,6 +6,13 @@
 		q.m.OriginalName <- "";
 		q.m.OriginalTitle <- "";
 
+		q.setStartValuesEx = @(__original) function ( _backgrounds, _addTraits = true )
+		{
+			__original( _backgrounds, _addTraits);
+			this.m.OriginalName = this.m.Name;
+			this.m.OriginalTitle = this.m.Title;
+		}
+
 		q.restoreOriginalName <- function()
 		{
 			if(this.m.OriginalName.len() > 0)

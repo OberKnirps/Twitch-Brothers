@@ -30,7 +30,24 @@ this.twitch_name_object <-
 		{
 			return this.Name;
 		}
+		if(this.DisplayName.len())
+		{
+			return this.DisplayName;
+		}
 		return this.TwitchID;
+	}
+
+	function toData()
+	{
+		local data = 
+		{
+            TwitchID = this.TwitchID,
+            DisplayName = this.DisplayName,
+            Name = this.Name,
+            Title = this.Title,
+            Live = this.Live
+        };
+        return data;
 	}
 
 	function onSerialize(_out)
