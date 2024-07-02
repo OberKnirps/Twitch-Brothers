@@ -353,15 +353,19 @@ this.twitch_interface <-
 
     function giveBroNewTwitchName(_bro)
     {
+        //should only be call when bro is in settlement roster
+        //TODO: move twitch name to hired if bro is in player roster, so this function can savely be called from everywhere
         local name = this.getRandomTwitchName("AsRecruit");
         
         if(name != null)
         {
-            if(_bro.m.TwitchID.len() == 0)
-                _bro.m.OriginalName = _bro.m.Name;
+            _bro.restoreOriginalName();
+
             _bro.setName(name.getName());
-            if(_bro.m.Title.len()==0 && name.Title)
+
+            if(_bro.m.OriginalTitle.len()==0 && name.Title)
                 _bro.setTitle(name.Title);
+            
             _bro.m.TwitchID = name.TwitchID;
             
             return true;
