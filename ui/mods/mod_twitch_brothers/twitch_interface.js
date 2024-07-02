@@ -92,6 +92,9 @@ TwitchInterface.prototype.initTwitchClient = function ()
         if(thisTI.Settings.Filter)
             characterFilter = /[|&;$%@<>(),.:\+\{\}\[\]\\\/]+/g;
 
+        if(userstate["badges-raw"] == null)
+            userstate["badges-raw"] = "";
+
         //commands
         var commandList = message.split(/ (?=!)/g);
         commandList.forEach( function(_str)
