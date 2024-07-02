@@ -202,7 +202,8 @@ this.twitch_interface <-
         {
             this.logError("Tried to move name to "+ _namePool.tostring() +": " + _twitchID + " is not in any name pool!");
         }else{
-            ::Const.TwitchInterface.nameToNamePool(nameObj,_namePool);              
+            if(nameObj.ParentTable != _namePool)
+                ::Const.TwitchInterface.nameToNamePool(nameObj,_namePool);              
         }
     }
 
