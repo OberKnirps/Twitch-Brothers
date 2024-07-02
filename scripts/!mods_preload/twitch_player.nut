@@ -15,10 +15,9 @@
 
 		q.restoreOriginalName <- function()
 		{
-			if(this.m.OriginalName.len() > 0)
-				this.setName(this.m.OriginalName);
-			if(this.m.OriginalTitle.len() > 0)
-				this.setTitle(this.m.OriginalTitle);
+			this.setName(this.m.OriginalName);
+			this.setTitle(this.m.OriginalTitle);
+			::Const.TwitchInterface.twitchIDToNamePool(this.m.TwitchID,::Const.TwitchInterface.m.TwitchNames.Free);
 			this.m.TwitchID = "";
 		}
 
