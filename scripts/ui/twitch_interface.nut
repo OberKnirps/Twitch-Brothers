@@ -200,7 +200,7 @@ this.twitch_interface <-
         local nameObj = ::Const.TwitchInterface.lookupName(_twitchID);
         if(nameObj == null)
         {
-            this.logError("Tried to move name to "+ _namePool.tostring() +": " + _twitchID + " is not in any name pool!");
+            this.logInfo("Tried to move name to "+ _namePool.tostring() +": " + _twitchID + " is not in any name pool!");
         }else{
             if(nameObj.ParentTable != _namePool)
                 ::Const.TwitchInterface.nameToNamePool(nameObj,_namePool);              
