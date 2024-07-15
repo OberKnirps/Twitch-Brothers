@@ -22,9 +22,11 @@ Multiple channels can be used at the same time
 - Chat commands
   - multiple commands per chat message are possible
   - `!bbname <name with spaces>`
-    - Set in-game name (the name is only used on new spawn). If not set, the normal twitch name will be used.
+    - Set in-game name (the name is only used on new spawn). If not set, the normal twitch display name will be used.
+    - Only using `!bbname` will reset the name to the twitch display name
   - `!bbtitle <title with spaces>`
     - Set in-game title (the title is only used on new spawns and only if there isn't already a title for that bro)
+    - Only using `!bbtitle` clears the title.
   - `!bbclear <twitchname or @twitchname>`
     - Command for moderators and broadcaster. Will reset name and title of specified user to prevent misuse
   - `!bbblock <twitchname or @twitchname>`

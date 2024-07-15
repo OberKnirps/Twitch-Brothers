@@ -104,39 +104,57 @@ TwitchInterface.prototype.initTwitchClient = function ()
                 return;
             }
 
-            if(_str.includes("!"+thisTI.Settings.Commands.Name.String+" ")
+            if(_str.includes("!"+thisTI.Settings.Commands.Name.String)
                 && thisTI.Settings.Commands.Name.Enabled
                 && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Name.Role,"")))
             {
-                var commandBody = _str.split("!"+thisTI.Settings.Commands.Name.String+" ")[1];
-                //filter some special/controll characters, just to be safe
-                commandBody = commandBody.replace(characterFilter, "");
+                var commandBody = "";
+                //if _str === "!<command name>" reset name (update with empty name)
+                if(_str !== "!"+thisTI.Settings.Commands.Name.String)
+                {
+                    commandBody = _str.split("!"+thisTI.Settings.Commands.Name.String+" ")[1];
 
-                //check custom name for blacklist
-                for(var i = 0; i < thisTI.BlackList.length; i++)
-                { 
-                    if(commandBody.includes(thisTI.BlackList[i])) 
-                    {
-                        return;
+                    //filter some special/controll characters, just to be safe
+                    commandBody = commandBody.replace(characterFilter, "");
+    
+                    //check custom name for blacklist
+                    for(var i = 0; i < thisTI.BlackList.length; i++)
+                    { 
+                        if(commandBody.includes(thisTI.BlackList[i])) 
+                        {
+                            return;
+                        }
                     }
                 }
+
                 thisTI.TwitchNames[userstate["username"]].Name = commandBody;
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
-                return;
             }
             else if(_str.includes("!"+thisTI.Settings.Commands.Title.String+" ")
                 && thisTI.Settings.Commands.Title.Enabled
                 && userstate["badges-raw"].includes(new RegExp(thisTI.Settings.Commands.Title.Role,"")))
             {
-                var commandBody = _str.split("!"+thisTI.Settings.Commands.Title.String+" ")[1];
-                //filter some special/controll characters, just to be safe
-                commandBody = commandBody.replace(characterFilter, "");
+                var commandBody = "";
+                //if _str == "!<command name>" reset title (update with empty title)
+                if(_str !== "!"+thisTI.Settings.Commands.Title.String)
+                {
+                    commandBody = _str.split("!"+thisTI.Settings.Commands.Title.String+" ")[1];
 
+                    //filter some special/controll characters, just to be safe
+                    commandBody = commandBody.replace(characterFilter, "");
+    
+                    //check custom title for blacklist
+                    for(var i = 0; i < thisTI.BlackList.length; i++)
+                    { 
+                        if(commandBody.includes(thisTI.BlackList[i])) 
+                        {
+                            return;
+                        }
+                    }
+                }
 
                 thisTI.TwitchNames[userstate["username"]].Title = commandBody;
                 SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[userstate["username"]]);
-
-
             }
             else if(_str.includes("!"+thisTI.Settings.Commands.Clear.String+" ")
                 && thisTI.Settings.Commands.Clear.Enabled
@@ -149,7 +167,6 @@ TwitchInterface.prototype.initTwitchClient = function ()
                     thisTI.TwitchNames[commandBody.toLowerCase()].Name = commandBody;
                     thisTI.TwitchNames[commandBody.toLowerCase()].Title = "";    
                     SQ.call(thisTI.mSQHandle, "updateTwitchName",thisTI.TwitchNames[commandBody.toLowerCase()]);   
-
                 }
             }
             else if(_str.includes("!"+thisTI.Settings.Commands.Block.String+" ")
