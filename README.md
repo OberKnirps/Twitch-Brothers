@@ -92,3 +92,8 @@ Multiple channels can be used at the same time
 - added tooltips
   - TwitchID tooltip now shows partial matches of tracked IDs
 - removed junk files from release
+
+## 0.4.2
+- empty !bbname and !bbtitle commands clear the saved names/titles (for the person using that command)
+- fixed 'Morderatz-Bug': twitch user without a twitch badge couldn't use the use the chat commands
+- fixed: when giving a recruitable bro a new twitch name (happens on entering settlement) the title wasn't properly deleted/restored/changed
