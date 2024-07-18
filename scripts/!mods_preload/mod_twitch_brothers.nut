@@ -1,6 +1,6 @@
 ::TwitchBrothers <- {
     ID = "mod_twitch_brothers",
-    Version = "0.4.2",
+    Version = "0.5.0",
     Name = "Twitch Brothers",
     Content = {}
 };
@@ -33,6 +33,10 @@
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_character_name_screen.js");
     ::Const.TwitchCharacterNameScreen <- this.new("scripts/ui/twitch_character_name_screen");
     ::MSU.UI.registerConnection(::Const.TwitchCharacterNameScreen);
+
+    ::Hooks.registerCSS("ui/mods/mod_twitch_brothers/twitch_world_event_screen.css");
+    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_world_event_screen.js");
+
 
     ::TwitchBrothers.Content.addSettings();
     ::TwitchBrothers.Content.hook_player();
