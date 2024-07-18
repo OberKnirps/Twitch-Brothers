@@ -95,7 +95,7 @@ TwitchInterface.prototype.initTwitchClient = function ()
         if(userstate["badges-raw"] == null)
             userstate["badges-raw"] = "";
 
-        //commands
+        //process commands
         var commandList = message.split(/ (?=!)/g);
         commandList.forEach( function(_str)
         {
@@ -182,8 +182,14 @@ TwitchInterface.prototype.initTwitchClient = function ()
                     SQ.call(thisTI.mSQHandle, "banTwitchID",commandBody);  
                 }
             }
-        })
-        
+        });
+
+        //count votes
+        if(!isNaN(parseFloat(message)))
+        {
+            Screens["TwitchEventVotes"].uniqueVoteForEvent(userstate["username"], parseFloat(message));
+            SQ.call(thisTI.mSQHandle, "logCallback","Voting for: "+ parseFloat(message));
+        }        
     });
 
     this.TwitchClient.on( 'ban', function( channel, username, reason ) 

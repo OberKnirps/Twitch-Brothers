@@ -4,11 +4,32 @@
     width: 2rem;
     position: relative;
     float: left;
+    margin-top: 0.75rem;
+    margin-left: -0.5rem;
+}
+
+.world-event-buttons .row.has-big-buttons .event-id
+{
+    height: 2rem;
+    width: 2rem;
+    position: relative;
+    float: left;
     margin-top: 2.25rem;
     margin-left: -0.5rem;
 }
 
 .world-event-buttons .row .event-counter
+{
+    height: 2rem;
+    width: 4rem;
+    position: absolute;
+    float: right;
+    margin-top: 0.75rem;
+    margin-left: 73rem; /* better to use positions? I have no clue how to do it properly... */
+    text-align: right;
+}
+
+.world-event-buttons .row.has-big-buttons .event-counter
 {
     height: 2rem;
     width: 4rem;
