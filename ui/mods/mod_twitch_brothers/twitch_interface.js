@@ -185,10 +185,9 @@ TwitchInterface.prototype.initTwitchClient = function ()
         });
 
         //count votes
-        if(!isNaN(parseFloat(message)))
+        if(/^\d+(?=\W{0,3}$)/.test(message))
         {
-            Screens["TwitchEventVotes"].uniqueVoteForEvent(userstate["username"], parseFloat(message));
-            SQ.call(thisTI.mSQHandle, "logCallback","Voting for: "+ parseFloat(message));
+            Screens["TwitchEventVotes"].uniqueVoteForEvent(userstate["username"], parseInt(message)-1);
         }        
     });
 
