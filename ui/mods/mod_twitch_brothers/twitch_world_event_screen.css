@@ -1,3 +1,16 @@
+.world-event-screen > .event-timer
+{
+    top: 20.0rem;
+    left: 58.0rem;
+    /*width: 102.4rem;
+    height: 76.8rem;*/
+    width: auto;
+    height: auto;
+    position: absolute;
+    margin: auto;
+    z-index: 2;
+}
+
 .world-event-buttons .row .event-id
 {
     height: 2rem;
