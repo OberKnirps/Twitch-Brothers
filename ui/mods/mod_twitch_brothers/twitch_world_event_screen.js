@@ -165,11 +165,11 @@ TwitchEventVotes.prototype.updateEventColors = function ()
 {
     var offset = 3;
     var sum = 0;
-    for(var i = 1; this.decisions.length > i; i++)
+    for(var i = 0; this.decisions.length > i; i++)
         sum += this.decisions[i].count + offset;
     var avrg = sum/(this.decisions.length-1);
 
-    for(var i = 1; this.decisions.length > i; i++)
+    for(var i = 0; this.decisions.length > i; i++)
     {
         if(this.decisions[i].count + offset < avrg)
         {
