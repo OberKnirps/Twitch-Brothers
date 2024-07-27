@@ -1,3 +1,5 @@
+"use strict";
+
 var TwitchEventDecision = function(_buttonRef, _labelRef, _counterRef)
 {
     this.button = _buttonRef;
@@ -8,7 +10,7 @@ var TwitchEventDecision = function(_buttonRef, _labelRef, _counterRef)
 
 var TwitchEventVotes = function()
 {
-    //this.mSQHandle = null;
+    this.mSQHandle = null;
 
     this.decisions = [];
     this.voterList = {};
@@ -139,16 +141,15 @@ var TwitchEventVotes = function()
                         }
                     }
 
-                    //select decision //TODO make decisions not interactable (when the selection delay starts?)
+                    //select decision
                     var selected = Math.floor(Math.random() * max.length);
                     
                     //show selected decision
-                    function triggerEvent()
+                    var triggerEvent = function ()
                     {
                         if(self.settings.timer.selection.auto)
                             max[selected].button.click();
                     }
-
                     var selectionBlink = (function ()
                         {
                             var i = 0; //static because of self-invoking function
@@ -182,8 +183,9 @@ var TwitchEventVotes = function()
                                 max[prev % max.length].button.removeClass('is-selected');
                                 max[curr % max.length].button.addClass('is-selected');
                                 if (Date.now() - self.startTime.getTime() < self.settings.timer.randomizeChoice.duration * 1000 || curr % max.length != selected)
+                                {
                                     setTimeout(blink,blinkIntervall * curr);
-                                else{
+                                }else{
                                     self.startTime = new Date();
                                     setTimeout(selectionBlink, 0);
                                 }
@@ -206,6 +208,16 @@ var TwitchEventVotes = function()
         }
     }
 };
+
+TwitchEventVotes.prototype.onConnection = function (_handle)
+{
+    this.mSQHandle = _handle;
+}
+
+TwitchEventVotes.prototype.updateSettings = function(_settings)
+{
+    this.settings = _settings;
+}
 
 TwitchEventVotes.prototype.voteForEvent = function (_eventId, _value)
 {

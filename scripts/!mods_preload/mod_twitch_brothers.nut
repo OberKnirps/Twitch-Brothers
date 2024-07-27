@@ -36,6 +36,8 @@
 
     ::Hooks.registerCSS("ui/mods/mod_twitch_brothers/twitch_event_votes.css");
     ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_event_votes.js");
+    ::Const.TwitchEventVotes <- this.new("scripts/ui/twitch_event_votes");
+    ::MSU.UI.registerConnection(::Const.TwitchEventVotes);
 
 
     ::TwitchBrothers.Content.addSettings();

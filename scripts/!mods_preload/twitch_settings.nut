@@ -64,19 +64,51 @@
                     AsDog = null,
                     AsItem = null
                 }
-            } 
+            },
+            Event =
+            {
+                Active = null,
+                Timer =
+                {
+                    Active = null,
+                    WaitForVote = null,
+                    Duration = null,
+                    Selection = 
+                    {
+                        Manual = null,
+                        Auto = null,
+                        Duration = null,
+                        Speed = null,
+                        Delay = null
+                    },
+                    RandomizeChoice =
+                    {
+                        Active = null,
+                        Duration = null,
+                        Speed = null,
+                    }        
+                },
+                Color =
+                {
+                    Active = null,
+                    ColorGood = null,
+                    ColorBad = null,
+                    VoteOffset = null
+                }
+            }
         }
 
     //create pages
     local streamSettings = TwitchBrothers.MSU.ModSettings.addPage("SettingsPage", "Stream Settings");
     local commandSettings = TwitchBrothers.MSU.ModSettings.addPage("CommandPage", "Commands");
     local spawnSettings = TwitchBrothers.MSU.ModSettings.addPage("SpawnPage", "Spawn Settings");
+    local eventSettings = TwitchBrothers.MSU.ModSettings.addPage("EventPage", "Event Settings");
     
     //Stream Settings
     streamSettings.addTitle("General", "General");
     streamSettings.addDivider("DividerGeneral");
 
-//TODO: make IDs UpperCamelCase
+    //TODO: make IDs UpperCamelCase
     //Channels to Monitor
     ::TwitchBrothers.Content.Settings.channelNames = streamSettings.addStringSetting("channelNames", "", "Channels");
     ::TwitchBrothers.Content.Settings.channelNames.addAfterChangeCallback(function ( _oldValue )
@@ -198,4 +230,50 @@
     ::TwitchBrothers.Content.Settings.Spawn.Retired.AsItem = spawnSettings.addBooleanSetting("SpawnRetiredAsItem" , true, "As Item");
 
 
+    //Event settings
+    ::TwitchBrothers.Content.Settings.Event.Active = eventSettings.addBooleanSetting("EventActive", true, "Enable event vote system", "If disabled, all options on this page won't have any effect.");
+
+    eventSettings.addTitle("Color", "Color");
+    eventSettings.addDivider("DividerColor");
+    ::TwitchBrothers.Content.Settings.Event.Color.Active = eventSettings.addBooleanSetting("EventColorActive", true, "Color event decisions", "If enabled, the decisions in an event will be colored based on how many votes they receive relative to the rest of the options.");
+    ::TwitchBrothers.Content.Settings.Event.Color.VoteOffset = eventSettings.addRangeSetting("EventColorVoteOffset", 2, 0, 10, 1, "Vote offset", "Adds the offset to the votes when calculating the colors, smoothing the color transition on early votes. At least 1 is recommended.");
+    ::TwitchBrothers.Content.Settings.Event.Color.ColorGood = eventSettings.addColorPickerSetting( "EventColorGood", "0,255,0,1", "Color most votes");
+    ::TwitchBrothers.Content.Settings.Event.Color.ColorBad = eventSettings.addColorPickerSetting( "EventColorBad", "255,0,0,1", "Color least votes");
+
+    eventSettings.addTitle("TimedEvents", "Timed Events");
+    eventSettings.addDivider("DividerTimedEvents");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Active = eventSettings.addBooleanSetting("EventTimerActive", true, "Enable timed event votes", "If disabled, all options bellow will have no effect.");
+    ::TwitchBrothers.Content.Settings.Event.Timer.WaitForVote = eventSettings.addBooleanSetting("EventTimerWaitForVote", true, "Wait for first Vote", "If enabled, starts the countdown once the first vote is received. Waits indefinitly if no one votes.");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Duration = eventSettings.addRangeSetting("EventTimerDuration", 30, 0, 900, 10, "Duration", "In seconds");
+
+    eventSettings.addTitle("TimedEventsSelection", "Event Selection");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Manual = eventSettings.addBooleanSetting("EventTimerSelectionManual", true, "Select decisions manually", "Choose event option yourself, bypassing the votes.");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Auto = eventSettings.addBooleanSetting("EventTimerSelectionAuto", true, "Select decisions automatically", "The option with the most votes is selected, when the countdown reaches 0. Chooses random on tie.");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Duration = eventSettings.addRangeSetting("EventTimerSelectionDuration", 1, 0, 10, 1, "Select-Animation duration", "In seconds");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Speed = eventSettings.addRangeSetting("EventTimerSelectionSpeed", 10, 0, 100, 1, "Select-Animation speed");
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Delay = eventSettings.addRangeSetting("EventTimerSelectionDelay", 2, 0, 10, 1, "Delay before selecting the option");
+
+    eventSettings.addTitle("TimedEventsRandomizeChoice", "Randomization Animation");
+
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Active = eventSettings.addBooleanSetting("EventTimerRandomizeChoiceActive", true, "Show animation");
+    eventSettings.addSpacer("TimedEventsRandomizeChoiceSpacer1", "35rem", "8rem");
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Duration = eventSettings.addRangeSetting("EventTimerRandomizeChoiceDuration", 1, 0, 10, 1, "Select-Animation duration", "In seconds");
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Speed = eventSettings.addRangeSetting("EventTimerRandomizeChoiceSpeed", 10, 0, 100, 1, "Select-Animation speed");
+
+    //add update callbacks
+    ::TwitchBrothers.Content.Settings.Event.Color.Active.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Color.VoteOffset.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Color.ColorGood.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Color.ColorBad.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Active.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.WaitForVote.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Duration.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Manual.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Auto.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Duration.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Speed.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.Selection.Delay.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Active.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Duration.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
+    ::TwitchBrothers.Content.Settings.Event.Timer.RandomizeChoice.Speed.addAfterChangeCallback(function ( _oldValue ) {::Const.TwitchEventVotes.updateSettings();});
 }
