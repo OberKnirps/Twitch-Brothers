@@ -101,6 +101,7 @@ this.twitch_interface <-
 
     function updateSettings()
     {
+        if(this.m.JSHandle == null) return;
         local settings = 
         {
             Commands = 
