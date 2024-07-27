@@ -34,8 +34,8 @@
     ::Const.TwitchCharacterNameScreen <- this.new("scripts/ui/twitch_character_name_screen");
     ::MSU.UI.registerConnection(::Const.TwitchCharacterNameScreen);
 
-    ::Hooks.registerCSS("ui/mods/mod_twitch_brothers/twitch_world_event_screen.css");
-    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_world_event_screen.js");
+    ::Hooks.registerCSS("ui/mods/mod_twitch_brothers/twitch_event_votes.css");
+    ::Hooks.registerJS("ui/mods/mod_twitch_brothers/twitch_event_votes.js");
 
 
     ::TwitchBrothers.Content.addSettings();
