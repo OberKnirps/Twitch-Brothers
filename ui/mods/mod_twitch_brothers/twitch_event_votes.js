@@ -95,6 +95,8 @@ var TwitchEventVotes = function()
         self.timer.text('');
         if(self.settings.timer.active)
         {
+            var buttonContainerRef = this.mButtonContainer;
+
             if(!self.settings.timer.selection.manual)
             {
                 this.mButtonContainer.append($('<div class="blocker"></div>'));
@@ -159,9 +161,12 @@ var TwitchEventVotes = function()
 
                                 if(Date.now() - self.startTime.getTime() < self.settings.timer.selection.duration * 1000
                                     || i % 2 == 1)
+                                {    
                                     setTimeout(selectionBlink, 600/self.settings.timer.selection.speed);
-                                else
+                                }else{
+                                    buttonContainerRef.append($('<div class="blocker"></div>'));
                                     setTimeout(triggerEvent, self.settings.timer.selection.delay * 1000);
+                                }
                                 i++;
                             }
                         })();
