@@ -30,7 +30,7 @@ var TwitchEventVotes = function()
             duration: 5, //in sec
             selection: 
             {
-                manual: true,
+                manual: false,
                 auto: true,
                 duration: 1, //in sec
                 speed: 10, //1-100
@@ -95,6 +95,11 @@ var TwitchEventVotes = function()
         self.timer.text('');
         if(self.settings.timer.active)
         {
+            if(!self.settings.timer.selection.manual)
+            {
+                this.mButtonContainer.append($('<div class="blocker"></div>'));
+            }
+
             self.timerCount = self.settings.timer.duration;
             self.timer.text(self.timerCount + 's');
             
@@ -183,7 +188,7 @@ var TwitchEventVotes = function()
                         })();
 
                     self.startTime = new Date();
-                    if(max.length == 1 || !self.timer.randomizeChoice.active)
+                    if(max.length == 1 || !self.settings.timer.randomizeChoice.active)
                     {
                         setTimeout(selectionBlink, 0);
                     }
