@@ -221,7 +221,7 @@ TwitchEventVotes.prototype.updateSettings = function(_settings)
 
 TwitchEventVotes.prototype.voteForEvent = function (_eventId, _value)
 {
-    if(this.voteRunning && _eventId >= 0 && _eventId <= this.decisions.length)
+    if(this.voteRunning && _eventId >= 0 && _eventId < this.decisions.length)
     {
         this.decisions[_eventId].count += _value;
         this.decisions[_eventId].counter.text(this.decisions[_eventId].count);
