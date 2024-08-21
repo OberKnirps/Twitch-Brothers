@@ -37,6 +37,12 @@ Multiple channels can be used at the same time
   - not working retroactive
   - option to auto blacklist common twitch bots
   - Custom names and titles will discarded if they contain an expression from the blacklist
+- Chat votes for event screens
+  - Selection modes:
+    - Manuel: show the vote count and highlight the highest voted option
+    - Auto: Start a timer after the first vote is received and select the highest voted option, randomized on tie
+    - Both: Allow manual selection to override auto select
+  - Customize event vote duration, selection animations and highlight colors
  
 # Requirements
 - MSU: https://www.nexusmods.com/battlebrothers/mods/42
