@@ -97,3 +97,7 @@ Multiple channels can be used at the same time
 - empty !bbname and !bbtitle commands clear the saved names/titles (for the person using that command)
 - fixed 'Morderatz-Bug': twitch user without a twitch badge couldn't use the use the chat commands
 - fixed: when giving a recruitable bro a new twitch name (happens on entering settlement) the title wasn't properly deleted/restored/changed
+
+## 0.5.0
+- implemented chat event votes
+- fixed: the game would crash on start when certain settings were set
